@@ -17,7 +17,7 @@
         <div class="col-12 col-sm-6 col-xl-4 mb-4">
             <div class="card border-0 shadow">
                 <div class="card-body">
-                    <a href="#">
+                    <a href="{{ url('edit-asset', ['id' => Crypt::encrypt($asset->id_asset)]) }}">
                         <div class="row d-block d-xl-flex align-items-center">
                             <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
                                 <div class="icon-shape icon-shape-primary rounded me-4 me-sm-0">
@@ -28,13 +28,29 @@
                                 </div>
                                 <div class="d-sm-none">
                                     <h2 class="h6">Asset Name</h2>
-                                    <h3 class="fw-extrabold mb-1" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 185px;">{{$asset->name}}</h3>
+                                    <h3 class="fw-extrabold mb-0" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 185px;">{{$asset->name}}</h3>
+                                    <span class="badge mb-1 
+                                        @if($asset->status == 'No Activity') bg-primary
+                                        @elseif($asset->status == 'Cancelled') bg-danger
+                                        @elseif($asset->status == 'On Progress') bg-secondary
+                                        @elseif($asset->status == 'Finished') bg-success
+                                        @endif">
+                                        {{ $asset->status }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-12 col-xl-7 px-xl-0">
                                 <div class="d-none d-sm-block">
                                     <h2 class="h6 text-gray-400 mb-0">Asset Name</h2>
-                                    <h3 class="fw-extrabold mb-2" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{$asset->name}}</h3>
+                                    <h3 class="fw-extrabold mb-0" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{$asset->name}}</h3>
+                                    <span class="badge mb-1 
+                                        @if($asset->status == 'No Activity') bg-primary
+                                        @elseif($asset->status == 'Cancelled') bg-danger
+                                        @elseif($asset->status == 'On Progress') bg-secondary
+                                        @elseif($asset->status == 'Finished') bg-success
+                                        @endif">
+                                        {{ $asset->status }}
+                                    </span>
                                 </div>
                                 <small class="d-flex align-items-center text-gray-500">
                                     {{ date('j F Y', strtotime($asset->purchase_date)) }},
@@ -47,14 +63,14 @@
                                     {{$asset->location}}
                                 </small>
                                 <div class="small d-flex mt-1">
-                                    <div>Total Expenses <span>{{$asset->purchase_price}}</span></div>
+                                    <div>Total Expenses <span>{{ 'IDR ' . number_format($asset->purchase_price, 0, ',', '.') }}</span></div>
                                 </div>
                             </div>
                         </div>
                     </a>
-                    </div>
                 </div>
             </div>
+        </div>
         @endforeach 
     @else
     <div class="col-12 mb-4" style="margin-top: 20%;">

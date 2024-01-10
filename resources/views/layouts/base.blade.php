@@ -54,7 +54,7 @@
     <script src="{{ asset('') }}asset/vendor/onscreen/dist/on-screen.umd.min.js"></script>
 
     <!-- Slider -->
-    <script src="{{ asset('') }}asset/vendor/nouislider/distribute/nouislider.min.js"></script>
+    <script src="{{ asset('') }}asset/vendor/nouislider/dist/nouislider.min.js"></script>
 
     <!-- Smooth scroll -->
     <script src="{{ asset('') }}asset/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>

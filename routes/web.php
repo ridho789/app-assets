@@ -22,3 +22,5 @@ use App\Http\Controllers\DashboardController;
 Route::get('/', [DashboardController::class, 'index']);
 Route::get('/create-asset', [AssetsController::class, 'create']);
 Route::post('store-asset', [AssetsController::class, 'store']);
+Route::get('edit-asset/{id_asset}', [AssetsController::class, 'edit']);
+Route::post('update-asset', [AssetsController::class, 'update']);

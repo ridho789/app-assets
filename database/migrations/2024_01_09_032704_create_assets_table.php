@@ -20,6 +20,7 @@ class CreateAssetsTable extends Migration
             $table->string('purchase_price');
             $table->date('purchase_date');
             $table->text('description');
+            $table->string('status');
             $table->timestamps();
         });
     }
