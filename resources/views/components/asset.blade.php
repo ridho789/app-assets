@@ -48,9 +48,10 @@
                         <label class="my-1 me-2" for="status">Status</label>
                         <select class="form-select" id="status" name="status" required>
                             <option value="">Select a status...</option>
-                            <option value="no activity">No Activity</option>
-                            <option value="on progress">On Progress</option>
-                            <option value="finished">Finished</option>
+                            <option value="No Activity">No Activity</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="On Progress">On Progress</option>
+                            <option value="Finished">Finished</option>
                         </select>
                     </div>
                     <button class="btn btn-primary" type="submit">Submit</button>
