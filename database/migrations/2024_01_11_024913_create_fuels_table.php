@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAssetsTable extends Migration
+class CreateFuelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateAssetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_assets', function (Blueprint $table) {
-            $table->id('id_asset');
+        Schema::create('tbl_fuels', function (Blueprint $table) {
+            $table->id('id_fuels');
             $table->string('name');
-            $table->string('location');
-            $table->string('purchase_price');
-            $table->date('purchase_date');
-            $table->text('description');
-            $table->string('status');
+            $table->date('date');
+            $table->string('usage_amount');
+            $table->string('vehicle');
+            $table->string('price');
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ class CreateAssetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tbl_assets');
+        Schema::dropIfExists('tbl_fuels');
     }
 }
