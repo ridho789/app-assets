@@ -12,7 +12,7 @@
                     <h4>Form Create New Asset</h4>
                     <div class="mb-3">
                         <label for="name" class="form-label">Asset Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter a asset name..." 
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter the asset name..." 
                             value="{{ old('name') }}" required>
                     </div>
                     <div class="mb-3">
@@ -51,7 +51,6 @@
                         <select class="form-select" id="status" name="status" required>
                             <option value="">Select a status...</option>
                             <option value="No Activity">No Activity</option>
-                            <option value="Cancelled">Cancelled</option>
                             <option value="On Progress">On Progress</option>
                             <option value="Finished">Finished</option>
                         </select>
@@ -299,7 +298,7 @@
                     <input type="hidden" name="id" value="{{ $asset->id_asset }}">
                     <div class="mb-3">
                         <label for="name" class="form-label">Asset Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter a asset name..." 
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter the asset name..." 
                             value="{{ old('name', $asset->name) }}" required>
                     </div>
                     <div class="mb-3">
@@ -344,7 +343,6 @@
                         <select class="form-select" id="status" name="status" required>
                             <option value="">Select a status...</option>
                             <option value="No Activity" {{ old('status', $asset->status) == 'No Activity' ? 'selected' : '' }}>No Activity</option>
-                            <option value="Cancelled" {{ old('status', $asset->status) == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
                             <option value="On Progress" {{ old('status', $asset->status) == 'On Progress' ? 'selected' : '' }}>On Progress</option>
                             <option value="Finished" {{ old('status', $asset->status) == 'Finished' ? 'selected' : '' }}>Finished</option>
                         </select>
