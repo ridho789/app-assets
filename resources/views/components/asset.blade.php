@@ -9,6 +9,7 @@
             <div class="row">
                 <div class="col-xl-1"><span></span></div>
                 <div class="col-xl-9">
+                    <h4>Form Create New Asset</h4>
                     <div class="mb-3">
                         <label for="name" class="form-label">Asset Name</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Enter a asset name..." 
@@ -21,7 +22,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="purchase_price" class="form-label">Purchase Price</label>
-                        <input type="text" class="form-control @error('purchase_price') is-invalid @enderror" id="purchase_price" 
+                        <input type="number" class="form-control @error('purchase_price') is-invalid @enderror" id="purchase_price" 
                             name="purchase_price" placeholder="Enter a purchase price..." value="{{ old('purchase_price') }}" required>
                         @error('purchase_price')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -80,216 +81,209 @@
                 <h2 class="h6 modal-title">New Expense</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body mb-2">
-                <div class="mb-3">
-                    <label class="my-1 me-2" for="expense_category">Expense Category</label>
-                    <select class="form-select" id="expense_category" name="expense_category" required>
-                        <option value="">Select a expense category...</option>
-                        <option value="Unexpected">Unexpected</option>
-                        <option value="Material">Material</option>
-                        <option value="Salary">Salary</option>
-                        <option value="Sparepart">Sparepart</option>
-                        <option value="Fuel">Fuel</option>
-                    </select>
-                </div>
-
-                <div id="form_unexpected_expense" style="display: none;">
+            <form action="{{ url('store-expense') }}" method="POST" id="form-store-new-expense">
+                <div class="modal-body mb-2">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $asset->id_asset }}">
                     <div class="mb-3">
-                        <label for="ux_name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="ux_name" name="ux_name" placeholder="Enter a name..." 
-                            value="{{ old('ux_name') }}" required>
+                        <label class="my-1 me-2" for="expense_category">Expense Category</label>
+                        <select class="form-select" id="expense_category" name="expense_category" required>
+                            <option value="">Select a expense category...</option>
+                            <option value="Unexpected">Unexpected</option>
+                            <option value="Material">Material</option>
+                            <option value="Salary">Salary</option>
+                            <option value="Sparepart">Sparepart</option>
+                            <option value="Fuel">Fuel</option>
+                        </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="ux_date">Date</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 
-                                        1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd">
-                                    </path>
-                                </svg>
-                            </span>
-                            <input data-datepicker="" class="form-control" id="ux_date" name="ux_date" type="text" placeholder="dd/mm/yyyy"
-                            value="{{ old('ux_date') }}" required>
+
+                    <div id="form_unexpected_expense" style="display: none;">
+                        <div class="mb-3">
+                            <label for="ux_name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="ux_name" name="ux_name" placeholder="Enter a name..." 
+                                value="{{ old('ux_name') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ux_date">Date</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 
+                                            1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <input data-datepicker="" class="form-control" id="ux_date" name="ux_date" type="text" placeholder="dd/mm/yyyy"
+                                value="{{ old('ux_date') }}" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ux_price" class="form-label">Price</label>
+                            <input type="number" class="form-control  @error('ux_price') is-invalid @enderror" id="ux_price" 
+                                name="ux_price" placeholder="Enter a price..." value="{{ old('ux_price') }}" required>
+                            @error('ux_price')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="ux_description" class="form-label">Description</label>
+                            <textarea class="form-control" id="ux_description" name="ux_description" rows="3" placeholder="Enter a description..." required>
+                                {{ old('ux_description') }}
+                            </textarea>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="ux_price" class="form-label">Price</label>
-                        <input type="text" class="form-control  @error('ux_price') is-invalid @enderror" id="ux_price" 
-                            name="ux_price" placeholder="Enter a price..." value="{{ old('ux_price') }}" required>
-                        @error('ux_price')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="ux_description" class="form-label">Description</label>
-                        <textarea class="form-control" id="ux_description" name="ux_description" rows="3" placeholder="Enter a description..." required>
-                            {{ old('ux_description') }}
-                        </textarea>
-                    </div>
-                </div>
 
-                <div id="form_material" style="display: none;">
-                    <div class="mb-3">
-                        <label for="m_name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="m_name" name="m_name" placeholder="Enter a name..." 
-                            value="{{ old('m_name') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="m_purchase_date">Purchase Date</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 
-                                        1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd">
-                                    </path>
-                                </svg>
-                            </span>
-                            <input data-datepicker="" class="form-control" id="m_purchase_date" name="m_purchase_date" type="text" placeholder="dd/mm/yyyy"
-                            value="{{ old('m_purchase_date') }}" required>
+                    <div id="form_material" style="display: none;">
+                        <div class="mb-3">
+                            <label for="m_name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="m_name" name="m_name" placeholder="Enter a name..." 
+                                value="{{ old('m_name') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="m_purchase_date">Purchase Date</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 
+                                            1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <input data-datepicker="" class="form-control" id="m_purchase_date" name="m_purchase_date" type="text" placeholder="dd/mm/yyyy"
+                                value="{{ old('m_purchase_date') }}" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="m_amount" class="form-label">Amount</label>
+                            <input type="number" class="form-control  @error('m_amount') is-invalid @enderror" id="m_amount" 
+                                name="m_amount" placeholder="Enter a amount..." value="{{ old('m_amount') }}" required>
+                            @error('m_amount')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="m_purchase_price" class="form-label">Purchase Price</label>
+                            <input type="number" class="form-control  @error('m_purchase_price') is-invalid @enderror" id="m_purchase_price" 
+                                name="m_purchase_price" placeholder="Enter a purchase price..." value="{{ old('m_purchase_price') }}" required>
+                            @error('m_purchase_price')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="m_description" class="form-label">Description</label>
+                            <textarea class="form-control" id="m_description" name="m_description" rows="3" placeholder="Enter a description..." required>
+                                {{ old('m_description') }}
+                            </textarea>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="m_amount" class="form-label">Amount</label>
-                        <input type="text" class="form-control  @error('m_amount') is-invalid @enderror" id="m_amount" 
-                            name="m_amount" placeholder="Enter a amount..." value="{{ old('m_amount') }}" required>
-                        @error('m_amount')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="m_purchase_price" class="form-label">Purchase Price</label>
-                        <input type="text" class="form-control  @error('m_purchase_price') is-invalid @enderror" id="m_purchase_price" 
-                            name="m_purchase_price" placeholder="Enter a purchase price..." value="{{ old('m_purchase_price') }}" required>
-                        @error('m_purchase_price')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="m_description" class="form-label">Description</label>
-                        <textarea class="form-control" id="m_description" name="m_description" rows="3" placeholder="Enter a description..." required>
-                            {{ old('m_description') }}
-                        </textarea>
-                    </div>
-                </div>
 
-                <div id="form_salary" style="display: none;">
-                    <div class="mb-3">
-                        <label for="s_period" class="form-label">Period</label>
-                        <input type="text" class="form-control" id="s_period" name="s_period" placeholder="Enter a period..." 
-                            value="{{ old('s_period') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="s_date">Date</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 
-                                        1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd">
-                                    </path>
-                                </svg>
-                            </span>
-                            <input data-datepicker="" class="form-control" id="s_date" name="s_date" type="text" placeholder="dd/mm/yyyy"
-                            value="{{ old('s_date') }}" required>
+                    <div id="form_salary" style="display: none;">
+                        <div class="mb-3">
+                            <label for="s_period" class="form-label">Period</label>
+                            <input type="text" class="form-control" id="s_period" name="s_period" placeholder="Enter a period..." 
+                                value="{{ old('s_period') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="s_date">Date</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 
+                                            1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <input data-datepicker="" class="form-control" id="s_date" name="s_date" type="text" placeholder="dd/mm/yyyy"
+                                value="{{ old('s_date') }}" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="s_amount_paid" class="form-label">Amount Paid</label>
+                            <input type="number" class="form-control  @error('s_amount_paid') is-invalid @enderror" id="s_amount_paid" 
+                                name="s_amount_paid" placeholder="Enter the amount paid..." value="{{ old('s_amount_paid') }}" required>
+                            @error('s_amount_paid')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="s_description" class="form-label">Description</label>
+                            <textarea class="form-control" id="s_description" name="s_description" rows="3" placeholder="Enter a description..." required>
+                                {{ old('s_description') }}
+                            </textarea>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="s_amount_paid" class="form-label">Amount Paid</label>
-                        <input type="text" class="form-control  @error('s_amount_paid') is-invalid @enderror" id="s_amount_paid" 
-                            name="s_amount_paid" placeholder="Enter a amount..." value="{{ old('s_amount_paid') }}" required>
-                        @error('s_amount_paid')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="s_description" class="form-label">Description</label>
-                        <textarea class="form-control" id="s_description" name="s_description" rows="3" placeholder="Enter a description..." required>
-                            {{ old('s_description') }}
-                        </textarea>
-                    </div>
-                </div>
 
-                <div id="form_sparepart" style="display: none;">
-                    <div class="mb-3">
-                        <label for="sp_name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="sp_name" name="sp_name" placeholder="Enter a name..." 
-                            value="{{ old('sp_name') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="sp_purchase_date">Purchase Date</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 
-                                        1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd">
-                                    </path>
-                                </svg>
-                            </span>
-                            <input data-datepicker="" class="form-control" id="sp_purchase_date" name="sp_purchase_date" type="text" placeholder="dd/mm/yyyy"
-                            value="{{ old('sp_purchase_date') }}" required>
+                    <div id="form_sparepart" style="display: none;">
+                        <div class="mb-3">
+                            <label for="sp_name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="sp_name" name="sp_name" placeholder="Enter a name..." 
+                                value="{{ old('sp_name') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="sp_purchase_date">Purchase Date</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 
+                                            1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <input data-datepicker="" class="form-control" id="sp_purchase_date" name="sp_purchase_date" type="text" placeholder="dd/mm/yyyy"
+                                value="{{ old('sp_purchase_date') }}" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="sp_price" class="form-label">Price</label>
+                            <input type="number" class="form-control  @error('sp_price') is-invalid @enderror" id="sp_price" 
+                                name="sp_price" placeholder="Enter a price..." value="{{ old('sp_price') }}" required>
+                            @error('sp_price')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="sp_description" class="form-label">Description</label>
+                            <textarea class="form-control" id="sp_description" name="sp_description" rows="3" placeholder="Enter a description..." required>
+                                {{ old('sp_description') }}
+                            </textarea>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="sp_price" class="form-label">Price</label>
-                        <input type="text" class="form-control  @error('sp_price') is-invalid @enderror" id="sp_price" 
-                            name="sp_price" placeholder="Enter a price..." value="{{ old('sp_price') }}" required>
-                        @error('sp_price')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="sp_description" class="form-label">Description</label>
-                        <textarea class="form-control" id="sp_description" name="sp_description" rows="3" placeholder="Enter a description..." required>
-                            {{ old('sp_description') }}
-                        </textarea>
-                    </div>
-                </div>
 
-                <div id="form_fuel" style="display: none;">
-                    <div class="mb-3">
-                        <label for="f_name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="f_name" name="f_name" placeholder="Enter a name..." 
-                            value="{{ old('f_name') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="f_date">Date</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 
-                                        1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd">
-                                    </path>
-                                </svg>
-                            </span>
-                            <input data-datepicker="" class="form-control" id="f_date" name="f_date" type="text" placeholder="dd/mm/yyyy"
-                            value="{{ old('f_date') }}" required>
+                    <div id="form_fuel" style="display: none;">
+                        <div class="mb-3">
+                            <label for="f_name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="f_name" name="f_name" placeholder="Enter a name..." 
+                                value="{{ old('f_name') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="f_date">Date</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 
+                                            1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <input data-datepicker="" class="form-control" id="f_date" name="f_date" type="text" placeholder="dd/mm/yyyy"
+                                value="{{ old('f_date') }}" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="f_price" class="form-label">Price</label>
+                            <input type="number" class="form-control  @error('f_price') is-invalid @enderror" id="f_price" 
+                                name="f_price" placeholder="Enter a price..." value="{{ old('f_price') }}" required>
+                            @error('f_price')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="f_usage_amount" class="form-label">Usage Amount</label>
-                        <input type="text" class="form-control" id="f_usage_amount" name="f_usage_amount" placeholder="Enter a usage amount..." 
-                            value="{{ old('f_usage_amount') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="f_vehicle" class="form-label">Vehicle</label>
-                        <input type="text" class="form-control" id="f_vehicle" name="f_vehicle" placeholder="Enter a vehicle..." 
-                            value="{{ old('f_vehicle') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="f_price" class="form-label">Price</label>
-                        <input type="text" class="form-control  @error('f_price') is-invalid @enderror" id="f_price" 
-                            name="f_price" placeholder="Enter a price..." value="{{ old('f_price') }}" required>
-                        @error('f_price')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
                 </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Submit</button>
-                <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -315,8 +309,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="purchase_price" class="form-label">Purchase Price</label>
-                        <input type="text" class="form-control  @error('purchase_price') is-invalid @enderror" id="purchase_price" 
-                            name="purchase_price" placeholder="Enter a purchase price..." value="{{ old('purchase_price', $asset->purchase_price) }}" required>
+                        <div class="input-group">
+                            <input type="number" class="form-control  @error('purchase_price') is-invalid @enderror" id="purchase_price" 
+                                name="purchase_price" placeholder="Enter a purchase price..." 
+                                value="{{ old('purchase_price', $asset->purchase_price) }}" required>
+                            <span class="input-group-text">{{ 'IDR ' . number_format($asset->purchase_price, 0, ',', '.') }}</span>
+                        </div>
                         @error('purchase_price')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -358,35 +356,52 @@
                     <h4>Expense Details</h4>
                     <div class="mb-3">
                         <label for="unexpected_expenses" class="form-label">Unexpected Expenses</label>
-                        <input type="text" class="form-control" id="unexpected_expenses" 
-                            name="unexpected_expenses" value="{{ old('unexpected_expenses', $asset->unexpected_expenses) }}" readonly>
+                        <input type="text" class="form-control" id="materials_expenses" 
+                            name="materials_expenses" value="{{ 'IDR ' . number_format($allUnexpectedExpenses, 0, ',', '.') }}" readonly>
+
+                        <!-- <div class="accordion" id="accordionPricing">
+                            <div class="accordion-item">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" style="height: 35px;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            <span>{{ 'IDR ' . number_format($allUnexpectedExpenses, 0, ',', '.') }}</span>
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionPricing">
+                                        <div class="accordion-body">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
                     </div>
                     <div class="mb-3">
                         <label for="materials_expenses" class="form-label">Materials Expenses</label>
                         <input type="text" class="form-control" id="materials_expenses" 
-                            name="materials_expenses" value="{{ old('materials_expenses', $asset->materials_expenses) }}" readonly>
+                            name="materials_expenses" value="{{ 'IDR ' . number_format($allMaterialExpenses, 0, ',', '.') }}" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="salary_expenses" class="form-label">Salary Expenses</label>
                         <input type="text" class="form-control" id="salary_expenses" 
-                            name="salary_expenses" value="{{ old('salary_expenses', $asset->salary_expenses) }}" readonly>
+                            name="salary_expenses" value="{{ 'IDR ' . number_format($allSalaryExpenses, 0, ',', '.') }}" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="spareparts_expenses" class="form-label">Spareparts Expenses</label>
                         <input type="text" class="form-control" id="spareparts_expenses" 
-                            name="spareparts_expenses" value="{{ old('spareparts_expenses', $asset->spareparts_expenses) }}" readonly>
+                            name="spareparts_expenses" value="{{ 'IDR ' . number_format($allSparepartExpenses, 0, ',', '.') }}" readonly>
                     </div>
                     <div class="mb-5">
                         <label for="fuel_expenses" class="form-label">Fuel Expenses</label>
                         <input type="text" class="form-control" id="fuel_expenses" 
-                            name="fuel_expenses" value="{{ old('fuel_expenses', $asset->fuel_expenses) }}" readonly>
+                            name="fuel_expenses" value="{{ 'IDR ' . number_format($allFuelExpenses, 0, ',', '.') }}" readonly>
                     </div>
                     <div>
                         <div class="col-xl-6"></div>
                         <div class="col-xl-6 mb-3">
                             <label for="total_expenses" class="form-label"><h5>Total Expenses</h5></label>
                             <input type="text" class="form-control" id="total_expenses" 
-                                name="total_expenses" value="{{ old('total_expenses', $asset->total_expenses) }}" readonly>
+                                name="total_expenses" value="{{ 'IDR ' . number_format($totalExpenses, 0, ',', '.') }}" readonly>
                         </div>
                     </div>
                 </div>
@@ -405,23 +420,23 @@
     const s_description = document.getElementById('s_description');
     const sp_description = document.getElementById('sp_description');
         
-    if (description.value) {
+    if (description && description.value) {
         description.value = description.value.trim();
     }
 
-    if (ux_description.value) {
+    if (ux_description && ux_description.value) {
         ux_description.value = ux_description.value.trim();
     }
 
-    if (m_description.value) {
+    if (m_description && m_description.value) {
         m_description.value = m_description.value.trim();
     }
 
-    if (s_description.value) {
+    if (s_description && s_description.value) {
         s_description.value = s_description.value.trim();
     }
 
-    if (sp_description.value) {
+    if (sp_description && sp_description.value) {
         sp_description.value = sp_description.value.trim();
     }
 
@@ -435,14 +450,19 @@
         // Menampilkan form yang sesuai dengan kategori
         if (selectedCategory === 'Unexpected') {
             document.getElementById('form_unexpected_expense').style.display = 'block';
+            setRequired('form_unexpected_expense', true);
         } else if (selectedCategory === 'Material') {
             document.getElementById('form_material').style.display = 'block';
+            setRequired('form_material', true);
         } else if (selectedCategory === 'Salary') {
             document.getElementById('form_salary').style.display = 'block';
+            setRequired('form_salary', true);
         } else if (selectedCategory === 'Sparepart') {
             document.getElementById('form_sparepart').style.display = 'block';
+            setRequired('form_sparepart', true);
         } else if (selectedCategory === 'Fuel') {
             document.getElementById('form_fuel').style.display = 'block';
+            setRequired('form_fuel', true);
         }
     }
 
@@ -453,6 +473,27 @@
         document.getElementById('form_salary').style.display = 'none';
         document.getElementById('form_sparepart').style.display = 'none';
         document.getElementById('form_fuel').style.display = 'none';
+
+        // Menghapus atribut 'required' dari semua elemen input dalam semua formulir
+        setRequired('form_unexpected_expense', false);
+        setRequired('form_material', false);
+        setRequired('form_salary', false);
+        setRequired('form_sparepart', false);
+        setRequired('form_fuel', false);
+    }
+
+    function setRequired(formId, isRequired) {
+        // Mendapatkan semua elemen input dan textarea dalam formulir
+        var formElements = document.getElementById(formId).querySelectorAll('input, textarea');
+
+        // Menetapkan atau menghapus atribut 'required' untuk setiap elemen
+        for (var i = 0; i < formElements.length; i++) {
+            if (isRequired) {
+                formElements[i].setAttribute('required', 'required');
+            } else {
+                formElements[i].removeAttribute('required');
+            }
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -465,5 +506,6 @@
             });
         }
     });
+
 </script>
 @endsection

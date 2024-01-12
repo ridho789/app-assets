@@ -63,7 +63,9 @@
                                     {{$asset->location}}
                                 </small>
                                 <div class="small d-flex mt-1">
-                                    <div>Total Expenses <span>{{ 'IDR ' . number_format($asset->purchase_price, 0, ',', '.') }}</span></div>
+                                    <div>Overall Expenses 
+                                        <span>{{ 'IDR ' . number_format($asset->tot_overall_expenses ?? 0, 0, ',', '.') }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AssetsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExpensesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,5 @@ Route::get('/create-asset', [AssetsController::class, 'create']);
 Route::post('store-asset', [AssetsController::class, 'store']);
 Route::get('edit-asset/{id_asset}', [AssetsController::class, 'edit']);
 Route::post('update-asset', [AssetsController::class, 'update']);
+
+Route::post('store-expense', [ExpensesController::class, 'store']);

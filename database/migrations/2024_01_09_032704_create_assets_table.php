@@ -21,6 +21,8 @@ class CreateAssetsTable extends Migration
             $table->date('purchase_date');
             $table->text('description');
             $table->string('status');
+            $table->string('tot_expenses')->default('0');
+            $table->string('tot_overall_expenses')->default('0');
             $table->timestamps();
         });
     }

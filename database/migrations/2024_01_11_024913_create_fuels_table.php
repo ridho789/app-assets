@@ -17,8 +17,6 @@ class CreateFuelsTable extends Migration
             $table->id('id_fuels');
             $table->string('name');
             $table->date('date');
-            $table->string('usage_amount');
-            $table->string('vehicle');
             $table->string('price');
             $table->timestamps();
         });
