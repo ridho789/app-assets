@@ -10,6 +10,8 @@ use App\Models\Salary;
 use App\Models\Sparepart;
 use App\Models\Unexpected;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Redis;
+use PDF;
 
 class AssetsController extends Controller
 {
@@ -81,5 +83,20 @@ class AssetsController extends Controller
 
         // dashboard
         return redirect('/');
+    }
+
+    public function report(Request $request) {
+        $asset = Asset::where('id_asset', $request->id)->first();
+        $fuel = Fuel::where('id_asset', $request->id)->get();
+        $material = Material::where('id_asset', $request->id)->get();
+        $salary = Salary::where('id_asset', $request->id)->get();
+        $sparepart = Sparepart::where('id_asset', $request->id)->get();
+        $unexpected = Unexpected::where('id_asset', $request->id)->get();
+
+        $pdf = PDF::loadView('reports.pdf_report_asset', compact(
+            'asset', 'fuel', 'material', 'salary', 'sparepart', 'unexpected'
+        ))->setPaper('a4', 'landscape');
+
+        return $pdf->download('Report Asset' . $asset->name . '.pdf');
     }
 }

@@ -44,6 +44,9 @@
         @include('layouts.topnavbar')
         
         @yield('content')
+
+        <!-- footer -->
+        @include('layouts.footer')
     </main>
 
     <!-- Core -->

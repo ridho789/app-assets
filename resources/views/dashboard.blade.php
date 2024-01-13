@@ -3,7 +3,7 @@
 @section('content')
 @if (count($assets) > 0)
 <div class="py-4">
-    <a href="{{ url('/create-asset') }}" class="btn btn-gray-800 d-inline-flex align-items-center me-2">
+    <a href="{{ url('/asset-create') }}" class="btn btn-gray-800 d-inline-flex align-items-center me-2">
         <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
@@ -17,7 +17,7 @@
         <div class="col-12 col-sm-6 col-xl-4 mb-4">
             <div class="card border-0 shadow">
                 <div class="card-body">
-                    <a href="{{ url('edit-asset', ['id' => Crypt::encrypt($asset->id_asset)]) }}">
+                    <a href="{{ url('asset-edit', ['id' => Crypt::encrypt($asset->id_asset)]) }}">
                         <div class="row d-block d-xl-flex align-items-center">
                             <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
                                 <div class="icon-shape icon-shape-primary rounded me-4 me-sm-0">
@@ -78,7 +78,7 @@
     <div class="col-12 mb-4" style="margin-top: 20%;">
         <span class="text-center">
             <p>Sorry, no data that can be displayed yet. <br>
-                <a href="{{ url('/create-asset') }}" type="submit" class="btn btn-primary mt-2" id="new-asset">Create new asset</a>
+                <a href="{{ url('/asset-create') }}" type="submit" class="btn btn-primary mt-2" id="new-asset">Create new asset</a>
             </p>
         </span>
     </div>

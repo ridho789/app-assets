@@ -21,9 +21,12 @@ use App\Http\Controllers\ExpensesController;
 // });
 
 Route::get('/', [DashboardController::class, 'index']);
-Route::get('/create-asset', [AssetsController::class, 'create']);
-Route::post('store-asset', [AssetsController::class, 'store']);
-Route::get('edit-asset/{id_asset}', [AssetsController::class, 'edit']);
-Route::post('update-asset', [AssetsController::class, 'update']);
+Route::get('asset-search', [DashboardController::class, 'search']);
 
-Route::post('store-expense', [ExpensesController::class, 'store']);
+Route::get('/asset-create', [AssetsController::class, 'create']);
+Route::post('asset-store', [AssetsController::class, 'store']);
+Route::get('asset-edit/{id_asset}', [AssetsController::class, 'edit']);
+Route::post('asset-update', [AssetsController::class, 'update']);
+Route::post('asset-pdf-report', [AssetsController::class, 'report']);
+
+Route::post('expense-store', [ExpensesController::class, 'store']);

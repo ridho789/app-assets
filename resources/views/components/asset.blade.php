@@ -4,7 +4,7 @@
 @if(empty($asset))
 <div class="card bg-white-100 border-0 shadow mt-4">
     <div class="card-header flex-row flex-0">
-        <form action="{{ url('store-asset') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ url('asset-store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-xl-1"><span></span></div>
@@ -63,13 +63,23 @@
     </div>
 </div>
 @else
-<div class="py-4">
-    <button class="btn btn-gray-800 d-inline-flex align-items-center me-2" data-bs-toggle="modal" data-bs-target="#modal-new-expense">
-        <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-        </svg>
-        New Expense
-    </button>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+    <div>
+        <button class="btn btn-gray-800 d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modal-new-expense">
+            <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            New Expense
+        </button>
+    </div>
+    <form action="{{ url('asset-pdf-report') }}" method="POST">
+        @csrf
+        <input type="hidden" name="id" value="{{ $asset->id_asset }}">
+        <button class="btn btn-outline-primary d-inline-flex align-items-center" type="submit">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
+            PDF Report
+        </button>
+    </form>
 </div>
 
 <!-- modal new expense -->
@@ -80,11 +90,11 @@
                 <h2 class="h6 modal-title">New Expense</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ url('store-expense') }}" method="POST" id="form-store-new-expense">
+            <form action="{{ url('expense-store') }}" method="POST" id="form-store-new-expense">
                 <div class="modal-body mb-2">
                     @csrf
                     <input type="hidden" name="id" value="{{ $asset->id_asset }}">
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label class="my-1 me-2" for="expense_category">Expense Category</label>
                         <select class="form-select" id="expense_category" name="expense_category" required>
                             <option value="">Select a expense category...</option>
@@ -289,7 +299,7 @@
 
 <div class="card bg-white-100 border-0 shadow">
     <div class="card-header flex-row flex-0">
-        <form action="{{ url('update-asset') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ url('asset-update') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-xl-1"></div>

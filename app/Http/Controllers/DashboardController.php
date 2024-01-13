@@ -11,4 +11,18 @@ class DashboardController extends Controller
         $assets = Asset::all();
         return view('/dashboard', ['assets' => $assets]);
     }
+
+    public function search(Request $request) {
+        $search = $request->input('search');
+
+        $asset = Asset::where('name', 'like', "%$search%")->get();
+
+        if ($asset->count() === 0) {
+            // dashboard
+            return redirect('/');
+
+        } else {
+            return view('/dashboard', ['assets' => $asset]);
+        }
+    }
 }
