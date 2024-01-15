@@ -87,16 +87,16 @@ class AssetsController extends Controller
 
     public function report(Request $request) {
         $asset = Asset::where('id_asset', $request->id)->first();
-        $fuel = Fuel::where('id_asset', $request->id)->get();
-        $material = Material::where('id_asset', $request->id)->get();
-        $salary = Salary::where('id_asset', $request->id)->get();
-        $sparepart = Sparepart::where('id_asset', $request->id)->get();
-        $unexpected = Unexpected::where('id_asset', $request->id)->get();
+        $fuel = Fuel::where('id_asset', $request->id)->orderBy('date', 'asc')->get();
+        $material = Material::where('id_asset', $request->id)->orderBy('purchase_date', 'asc')->get();
+        $salary = Salary::where('id_asset', $request->id)->orderBy('date', 'asc')->get();
+        $sparepart = Sparepart::where('id_asset', $request->id)->orderBy('purchase_date', 'asc')->get();
+        $unexpected = Unexpected::where('id_asset', $request->id)->orderBy('date', 'asc')->get();
 
         $pdf = PDF::loadView('reports.pdf_report_asset', compact(
             'asset', 'fuel', 'material', 'salary', 'sparepart', 'unexpected'
         ))->setPaper('a4', 'landscape');
 
-        return $pdf->download('Report Asset' . $asset->name . '.pdf');
+        return $pdf->download('Report Asset - ' . $asset->name . '.pdf');
     }
 }
