@@ -15,7 +15,9 @@ class DashboardController extends Controller
     public function search(Request $request) {
         $search = $request->input('search');
 
-        $asset = Asset::where('name', 'like', "%$search%")->get();
+        $asset = Asset::where('name', 'like', "%$search%")
+            ->orWhereRaw('location like ?', ["%$search%"])
+            ->get();
 
         if ($asset->count() === 0) {
             // dashboard
