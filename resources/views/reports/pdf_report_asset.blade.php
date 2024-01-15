@@ -94,7 +94,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{$u->name}}</td>
                             <td>{{ date('j F Y', strtotime($u->date)) }}</td>
-                            <td>{{$u->price}}</td>
+                            <td>{{ 'IDR ' . number_format($u->price ?? 0, 0, ',', '.') }}</td>
                             <td>{{$u->description}}</td>
                         </tr>
                         @php
@@ -138,7 +138,7 @@
                             <td>{{$m->name}}</td>
                             <td>{{ date('j F Y', strtotime($m->purchase_date)) }}</td>
                             <td>{{$m->amount}}</td>
-                            <td>{{$m->purchase_price}}</td>
+                            <td>{{ 'IDR ' . number_format($m->purchase_price ?? 0, 0, ',', '.') }}</td>
                             <td>{{$m->description}}</td>
                         </tr>
                         @php
@@ -180,7 +180,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{$s->period}}</td>
                             <td>{{ date('j F Y', strtotime($s->date)) }}</td>
-                            <td>{{$s->amount_paid}}</td>
+                            <td>{{ 'IDR ' . number_format($s->amount_paid ?? 0, 0, ',', '.') }}</td>
                             <td>{{$s->description}}</td>
                         </tr>
                         @php
@@ -222,7 +222,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{$sp->name}}</td>
                             <td>{{ date('j F Y', strtotime($sp->purchase_date)) }}</td>
-                            <td>{{$sp->price}}</td>
+                            <td>{{ 'IDR ' . number_format($sp->price ?? 0, 0, ',', '.') }}</td>
                             <td>{{$sp->description}}</td>
                         </tr>
                         @php
@@ -263,7 +263,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{$f->name}}</td>
                             <td>{{ date('j F Y', strtotime($f->date)) }}</td>
-                            <td>{{$f->price}}</td>
+                            <td>{{ 'IDR ' . number_format($f->price ?? 0, 0, ',', '.') }}</td>
                         </tr>
                         @php
                             $totalFuel += $f->price;
