@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AssetsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpensesController;
+use App\Http\Controllers\UnexpectedController;
+use App\Http\Controllers\MaterialsController;
+use App\Http\Controllers\SalaryController;
+use App\Http\Controllers\SparepartsController;
+use App\Http\Controllers\FuelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +35,13 @@ Route::post('asset-update', [AssetsController::class, 'update']);
 Route::post('asset-pdf-report', [AssetsController::class, 'report']);
 
 Route::post('expense-store', [ExpensesController::class, 'store']);
+
+Route::get('/unexpected-index/{id_asset}', [UnexpectedController::class, 'index']);
+
+Route::get('/material-index/{id_asset}', [MaterialsController::class, 'index']);
+
+Route::get('/salary-index/{id_asset}', [SalaryController::class, 'index']);
+
+Route::get('/sparepart-index/{id_asset}', [SparepartsController::class, 'index']);
+
+Route::get('/fuel-index/{id_asset}', [FuelController::class, 'index']);

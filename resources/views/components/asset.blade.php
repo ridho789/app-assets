@@ -364,45 +364,83 @@
                     <h4>Expense Details</h4>
                     <div class="mb-3">
                         <label for="unexpected_expenses" class="form-label">Unexpected Expenses</label>
-                        <input type="text" class="form-control" id="materials_expenses" 
-                            name="materials_expenses" value="{{ 'IDR ' . number_format($allUnexpectedExpenses, 0, ',', '.') }}" readonly>
-
-                        <!-- <div class="accordion" id="accordionPricing">
-                            <div class="accordion-item">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingTwo">
-                                        <button class="accordion-button collapsed" style="height: 35px;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                            <span>{{ 'IDR ' . number_format($allUnexpectedExpenses, 0, ',', '.') }}</span>
-                                        </button>
-                                    </h2>
-                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionPricing">
-                                        <div class="accordion-body">
-                                            
-                                        </div>
-                                    </div>
-                                </div>
+                        @if ($allUnexpectedExpenses)
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="unexpected_expenses" 
+                                    name="unexpected_expenses" value="{{ 'IDR ' . number_format($allUnexpectedExpenses, 0, ',', '.') }}" readonly>
+                                <a href="{{ url('/unexpected-index', ['id' => Crypt::encrypt($asset->id_asset)]) }}" 
+                                    data-bs-toggle="tooltip" data-bs-placement="right" title="Click to view details" class="btn btn-primary input-group-text">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
                             </div>
-                        </div> -->
+                        @else
+                            <input type="text" class="form-control" id="unexpected_expenses" 
+                                name="unexpected_expenses" value="{{ 'IDR ' . number_format($allUnexpectedExpenses, 0, ',', '.') }}" readonly>
+                        @endif
                     </div>
                     <div class="mb-3">
                         <label for="materials_expenses" class="form-label">Materials Expenses</label>
-                        <input type="text" class="form-control" id="materials_expenses" 
-                            name="materials_expenses" value="{{ 'IDR ' . number_format($allMaterialExpenses, 0, ',', '.') }}" readonly>
+                        @if ($allMaterialExpenses)
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="materials_expenses" 
+                                    name="materials_expenses" value="{{ 'IDR ' . number_format($allMaterialExpenses, 0, ',', '.') }}" readonly>
+                                <a href="{{ url('/material-index', ['id' => Crypt::encrypt($asset->id_asset)]) }}" 
+                                    data-bs-toggle="tooltip" data-bs-placement="right" title="Click to view details" class="btn btn-primary input-group-text">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            </div>
+                        @else
+                            <input type="text" class="form-control" id="materials_expenses" 
+                                name="materials_expenses" value="{{ 'IDR ' . number_format($allMaterialExpenses, 0, ',', '.') }}" readonly>
+                        @endif
                     </div>
                     <div class="mb-3">
                         <label for="salary_expenses" class="form-label">Salary Expenses</label>
-                        <input type="text" class="form-control" id="salary_expenses" 
-                            name="salary_expenses" value="{{ 'IDR ' . number_format($allSalaryExpenses, 0, ',', '.') }}" readonly>
+                        @if ($allSalaryExpenses)
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="salary_expenses" 
+                                    name="salary_expenses" value="{{ 'IDR ' . number_format($allSalaryExpenses, 0, ',', '.') }}" readonly>
+                                <a href="{{ url('/salary-index', ['id' => Crypt::encrypt($asset->id_asset)]) }}" 
+                                    data-bs-toggle="tooltip" data-bs-placement="right" title="Click to view details" class="btn btn-primary input-group-text">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            </div>
+                        @else
+                            <input type="text" class="form-control" id="salary_expenses" 
+                                name="salary_expenses" value="{{ 'IDR ' . number_format($allSalaryExpenses, 0, ',', '.') }}" readonly>
+                        @endif
                     </div>
                     <div class="mb-3">
                         <label for="spareparts_expenses" class="form-label">Spareparts Expenses</label>
-                        <input type="text" class="form-control" id="spareparts_expenses" 
-                            name="spareparts_expenses" value="{{ 'IDR ' . number_format($allSparepartExpenses, 0, ',', '.') }}" readonly>
+                        @if ($allSparepartExpenses)
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="spareparts_expenses" 
+                                    name="spareparts_expenses" value="{{ 'IDR ' . number_format($allSparepartExpenses, 0, ',', '.') }}" readonly>
+                                <a href="{{ url('/sparepart-index', ['id' => Crypt::encrypt($asset->id_asset)]) }}" 
+                                    data-bs-toggle="tooltip" data-bs-placement="right" title="Click to view details" class="btn btn-primary input-group-text">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            </div>
+                        @else
+                            <input type="text" class="form-control" id="spareparts_expenses" 
+                                name="spareparts_expenses" value="{{ 'IDR ' . number_format($allSparepartExpenses, 0, ',', '.') }}" readonly>
+                        @endif
                     </div>
                     <div class="mb-5">
                         <label for="fuel_expenses" class="form-label">Fuel Expenses</label>
-                        <input type="text" class="form-control" id="fuel_expenses" 
-                            name="fuel_expenses" value="{{ 'IDR ' . number_format($allFuelExpenses, 0, ',', '.') }}" readonly>
+                        @if ($allFuelExpenses)
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="fuel_expenses" 
+                                    name="fuel_expenses" value="{{ 'IDR ' . number_format($allFuelExpenses, 0, ',', '.') }}" readonly>
+                                <a href="{{ url('/fuel-index', ['id' => Crypt::encrypt($asset->id_asset)]) }}" 
+                                    data-bs-toggle="tooltip" data-bs-placement="right" title="Click to view details" class="btn btn-primary input-group-text">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            </div>
+                        @else
+                            <input type="text" class="form-control" id="fuel_expenses" 
+                                name="fuel_expenses" value="{{ 'IDR ' . number_format($allFuelExpenses, 0, ',', '.') }}" readonly>
+                        @endif
                     </div>
                     <div>
                         <div class="col-xl-6"></div>
