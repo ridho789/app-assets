@@ -9,6 +9,7 @@ use App\Http\Controllers\MaterialsController;
 use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\SparepartsController;
 use App\Http\Controllers\FuelController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +33,7 @@ Route::get('/asset-create', [AssetsController::class, 'create']);
 Route::post('asset-store', [AssetsController::class, 'store']);
 Route::get('asset-edit/{id_asset}', [AssetsController::class, 'edit']);
 Route::post('asset-update', [AssetsController::class, 'update']);
-Route::post('asset-pdf-report', [AssetsController::class, 'report']);
+Route::get('asset-pdf-report/{id_asset}', [AssetsController::class, 'report']);
 
 Route::post('expense-store', [ExpensesController::class, 'store']);
 
@@ -50,3 +51,5 @@ Route::post('sparepart-update', [SparepartsController::class, 'update']);
 
 Route::get('/fuel-index/{id_asset}', [FuelController::class, 'index']);
 Route::post('fuel-update', [FuelController::class, 'update']);
+
+Route::get('report-excel/{id}', [ReportController::class, 'reportExcel']);
