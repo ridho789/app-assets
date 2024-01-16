@@ -14,7 +14,7 @@ class CreateSparepartsTable extends Migration
     public function up()
     {
         Schema::create('tbl_spareparts', function (Blueprint $table) {
-            $table->id('id_spareparts');
+            $table->id('id_sparepart');
             $table->string('name');
             $table->date('purchase_date');
             $table->string('price');

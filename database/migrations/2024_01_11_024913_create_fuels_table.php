@@ -14,7 +14,7 @@ class CreateFuelsTable extends Migration
     public function up()
     {
         Schema::create('tbl_fuels', function (Blueprint $table) {
-            $table->id('id_fuels');
+            $table->id('id_fuel');
             $table->string('name');
             $table->date('date');
             $table->string('price');

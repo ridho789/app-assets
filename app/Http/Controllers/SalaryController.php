@@ -16,4 +16,16 @@ class SalaryController extends Controller
 
         return view('/components/salary', compact('asset', 'salary'));
     }
+
+    public function update(Request $request) {
+        $salaryData = [
+            'period' => $request->s_period,
+            'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->s_date)->toDateString(),
+            'amount_paid' => $request->s_amount_paid,
+            'description' =>$request->s_description,
+        ];
+
+        Salary::where('id_salary', $request->id)->update($salaryData);
+        return redirect()->back();
+    }
 }

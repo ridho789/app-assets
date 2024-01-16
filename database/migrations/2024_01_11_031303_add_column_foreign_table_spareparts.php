@@ -14,7 +14,7 @@ class AddColumnForeignTableSpareparts extends Migration
     public function up()
     {
         Schema::table('tbl_spareparts', function (Blueprint $table) {
-            $table->unsignedBigInteger('id_asset')->after('id_spareparts');
+            $table->unsignedBigInteger('id_asset')->after('id_sparepart');
             $table->foreign('id_asset')->references('id_asset')->on('tbl_assets');
         });
     }

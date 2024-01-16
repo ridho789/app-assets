@@ -16,4 +16,17 @@ class MaterialsController extends Controller
 
         return view('/components/material', compact('asset', 'material'));
     }
+
+    public function update(Request $request) {
+        $materialData = [
+            'name' => $request->m_name,
+            'purchase_date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->m_purchase_date)->toDateString(),
+            'amount' => $request->m_amount,
+            'purchase_price' => $request->m_purchase_price,
+            'description' =>$request->m_description,
+        ];
+
+        Material::where('id_material', $request->id)->update($materialData);
+        return redirect()->back();
+    }
 }

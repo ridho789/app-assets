@@ -37,11 +37,16 @@ Route::post('asset-pdf-report', [AssetsController::class, 'report']);
 Route::post('expense-store', [ExpensesController::class, 'store']);
 
 Route::get('/unexpected-index/{id_asset}', [UnexpectedController::class, 'index']);
+Route::post('unexpected-update', [UnexpectedController::class, 'update']);
 
 Route::get('/material-index/{id_asset}', [MaterialsController::class, 'index']);
+Route::post('material-update', [MaterialsController::class, 'update']);
 
 Route::get('/salary-index/{id_asset}', [SalaryController::class, 'index']);
+Route::post('salary-update', [SalaryController::class, 'update']);
 
 Route::get('/sparepart-index/{id_asset}', [SparepartsController::class, 'index']);
+Route::post('sparepart-update', [SparepartsController::class, 'update']);
 
 Route::get('/fuel-index/{id_asset}', [FuelController::class, 'index']);
+Route::post('fuel-update', [FuelController::class, 'update']);

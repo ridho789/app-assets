@@ -14,7 +14,7 @@ class AddColumnForeignTableFuels extends Migration
     public function up()
     {
         Schema::table('tbl_fuels', function (Blueprint $table) {
-            $table->unsignedBigInteger('id_asset')->after('id_fuels');
+            $table->unsignedBigInteger('id_asset')->after('id_fuel');
             $table->foreign('id_asset')->references('id_asset')->on('tbl_assets');
         });
     }

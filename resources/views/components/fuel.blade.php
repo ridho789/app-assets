@@ -6,11 +6,64 @@
         <div class="mb-3 mb-lg-0">
             <h1 class="h4">Fuel Expenses</h1>
             <p class="mb-0">
-                The following is a list of fuel expense of asset <b>{{ $asset->name }}</b>
+                The following is a list of fuel expense of asset
+                <a href="{{ url('asset-edit', ['id' => Crypt::encrypt($asset->id_asset)]) }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Back to asset form">
+                    <b>{{ $asset->name }}</b> <i class="fa-solid fa-rotate-left"></i>
+                </a>
             </p>
         </div>
     </div>
 </div>
+
+<!-- Modal Content -->
+<div class="modal fade" id="modal-edit-fuel" tabindex="-1" role="dialog" aria-labelledby="modal-edit-fuel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="h6 modal-title">Fuel Expenses</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ url('fuel-update') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div id="form_fuel">
+                        <input type="hidden" name="id" id="id">
+                        <div class="mb-3">
+                            <label for="f_name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="f_name" name="f_name" placeholder="Enter a name..." value="{{ old('f_name') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="f_date">Date</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 
+                                            1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <input data-datepicker="" class="form-control" id="f_date" name="f_date" type="text" placeholder="dd/mm/yyyy" value="{{ old('f_date') }}" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="f_price" class="form-label">Price</label>
+                            <input type="number" class="form-control  @error('f_price') is-invalid @enderror" id="f_price" name="f_price" placeholder="Enter a price..." value="{{ old('f_price') }}" required>
+                            @error('f_price')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-secondary">Update</button>
+                    <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End of Modal Content -->
+
 <div class="card border-0 shadow mb-4">
     <div class="card-body">
         <div class="table-responsive">
@@ -21,16 +74,21 @@
                         <th class="border-0">Name</th>
                         <th class="border-0">Date</th>
                         <th class="border-0">Price</th>
-                        <!-- <th class="border-0 rounded-end">Action</th> -->
+                        <th class="border-0 rounded-end">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($fuel as $f)
-                    <tr>
+                    <tr data-id="{{ $f->id_fuel }}">
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{$f->name}}</td>
-                        <td>{{ date('j F Y', strtotime($f->date)) }}</td>
-                        <td>{{ 'IDR ' . number_format($f->price ?? 0, 0, ',', '.') }}</td>
+                        <td class="fuel-name">{{ $f->name }}</td>
+                        <td class="fuel-date">{{ date('j F Y', strtotime($f->date)) }}</td>
+                        <td class="fuel-price">{{ 'IDR ' . number_format($f->price ?? 0, 0, ',', '.') }}</td>
+                        <td>
+                            <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-fuel">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -38,4 +96,30 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var editButtons = document.querySelectorAll(".edit-button");
+        editButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                event.preventDefault();
+
+                var row = this.closest("tr");
+                var id = row.getAttribute("data-id");
+                var name = row.querySelector(".fuel-name").textContent;
+                var date = row.querySelector(".fuel-date").textContent.trim();
+                var price = row.querySelector(".fuel-price").textContent.replace(/[^\d]/g, '');
+
+                const dateFormat = moment(date, 'DD MMMM YYYY').format('MM/D/Y');
+                const priceConvert = parseFloat(price);
+
+                // Mengisi data ke dalam formulir
+                document.getElementById("id").value = id;
+                document.getElementById("f_name").value = name;
+                document.getElementById("f_date").value = dateFormat;
+                document.getElementById("f_price").value = price;
+            });
+        });
+    });
+</script>
 @endsection

@@ -16,4 +16,16 @@ class UnexpectedController extends Controller
 
         return view('/components/unexpected', compact('asset', 'unexpected'));
     }
+
+    public function update(Request $request) {
+        $unexpectedData = [
+            'name' => $request->ux_name,
+            'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->ux_date)->toDateString(),
+            'price' => $request->ux_price,
+            'description' =>$request->ux_description,
+        ];
+
+        Unexpected::where('id_unexpected_expenses', $request->id)->update($unexpectedData);
+        return redirect()->back();
+    }
 }

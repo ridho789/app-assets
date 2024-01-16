@@ -16,4 +16,15 @@ class FuelController extends Controller
 
         return view('/components/fuel', compact('asset', 'fuel'));
     }
+
+    public function update(Request $request) {
+        $fueltData = [
+            'name' => $request->f_name,
+            'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->f_date)->toDateString(),
+            'price' => $request->f_price,
+        ];
+
+        Fuel::where('id_fuel', $request->id)->update($fueltData);
+        return redirect()->back();
+    }
 }
