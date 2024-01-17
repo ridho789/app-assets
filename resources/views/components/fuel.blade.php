@@ -52,6 +52,12 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        <div class="mb-3">
+                            <label for="f_description" class="form-label">Description</label>
+                            <textarea class="form-control" id="f_description" name="f_description" rows="3" placeholder="Enter a description..." required>
+                            {{ old('f_description') }}
+                            </textarea>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -74,6 +80,7 @@
                         <th class="border-0">Name</th>
                         <th class="border-0">Date</th>
                         <th class="border-0">Price</th>
+                        <th class="border-0">Description</th>
                         <th class="border-0 rounded-end">Action</th>
                     </tr>
                 </thead>
@@ -84,6 +91,7 @@
                         <td class="fuel-name">{{ $f->name }}</td>
                         <td class="fuel-date">{{ date('j F Y', strtotime($f->date)) }}</td>
                         <td class="fuel-price">{{ 'IDR ' . number_format($f->price ?? 0, 0, ',', '.') }}</td>
+                        <td class="fuel-description">{{ $f->description }}</td>
                         <td>
                             <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-fuel">
                                 <i class="fa-solid fa-pen"></i>
@@ -98,6 +106,11 @@
 </div>
 
 <script>
+    const m_description = document.getElementById('f_description');
+    if (f_description && f_description.value) {
+        f_description.value = f_description.value.trim();
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         var editButtons = document.querySelectorAll(".edit-button");
         editButtons.forEach(function(button) {
@@ -109,6 +122,7 @@
                 var name = row.querySelector(".fuel-name").textContent;
                 var date = row.querySelector(".fuel-date").textContent.trim();
                 var price = row.querySelector(".fuel-price").textContent.replace(/[^\d]/g, '');
+                var description = row.querySelector(".fuel-description").textContent;
 
                 const dateFormat = moment(date, 'DD MMMM YYYY').format('MM/D/Y');
                 const priceConvert = parseFloat(price);
@@ -118,6 +132,7 @@
                 document.getElementById("f_name").value = name;
                 document.getElementById("f_date").value = dateFormat;
                 document.getElementById("f_price").value = price;
+                document.getElementById("f_description").value = description;
             });
         });
     });

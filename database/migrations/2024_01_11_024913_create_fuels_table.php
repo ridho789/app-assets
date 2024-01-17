@@ -18,6 +18,7 @@ class CreateFuelsTable extends Migration
             $table->string('name');
             $table->date('date');
             $table->string('price');
+            $table->text('description');
             $table->timestamps();
         });
     }

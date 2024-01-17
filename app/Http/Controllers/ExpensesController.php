@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asset;
 use Illuminate\Http\Request;
 use App\Models\Fuel;
 use App\Models\Material;
@@ -36,6 +37,11 @@ class ExpensesController extends Controller
                 'description' =>$request->m_description,
             ]);
 
+            $asset = Asset::where('id_asset', $request->id)->first();
+            if ($asset->status === 'No Activity') {
+                $asset->update(['status' => 'On Progress']);
+            }
+
             return redirect()->back();
         }
 
@@ -47,6 +53,11 @@ class ExpensesController extends Controller
                 'amount_paid' => $request->s_amount_paid,
                 'description' =>$request->s_description,
             ]);
+
+            $asset = Asset::where('id_asset', $request->id)->first();
+            if ($asset->status === 'No Activity') {
+                $asset->update(['status' => 'On Progress']);
+            }
 
             return redirect()->back();
         }
@@ -60,6 +71,11 @@ class ExpensesController extends Controller
                 'description' =>$request->sp_description,
             ]);
 
+            $asset = Asset::where('id_asset', $request->id)->first();
+            if ($asset->status === 'No Activity') {
+                $asset->update(['status' => 'On Progress']);
+            }
+
             return redirect()->back();
         }
 
@@ -69,7 +85,13 @@ class ExpensesController extends Controller
                 'name' => $request->f_name,
                 'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->f_date)->toDateString(),
                 'price' => $request->f_price,
+                'description' =>$request->f_description,
             ]);
+
+            $asset = Asset::where('id_asset', $request->id)->first();
+            if ($asset->status === 'No Activity') {
+                $asset->update(['status' => 'On Progress']);
+            }
 
             return redirect()->back();
         }

@@ -22,6 +22,7 @@ class FuelController extends Controller
             'name' => $request->f_name,
             'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->f_date)->toDateString(),
             'price' => $request->f_price,
+            'description' =>$request->f_description,
         ];
 
         Fuel::where('id_fuel', $request->id)->update($fueltData);

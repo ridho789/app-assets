@@ -282,6 +282,12 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        <div class="mb-3">
+                            <label for="f_description" class="form-label">Description</label>
+                            <textarea class="form-control" id="f_description" name="f_description" rows="3" placeholder="Enter a description..." required>
+                            {{ old('f_description') }}
+                            </textarea>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -442,6 +448,7 @@
     const m_description = document.getElementById('m_description');
     const s_description = document.getElementById('s_description');
     const sp_description = document.getElementById('sp_description');
+    const f_description = document.getElementById('f_description');
 
     if (description && description.value) {
         description.value = description.value.trim();
@@ -461,6 +468,10 @@
 
     if (sp_description && sp_description.value) {
         sp_description.value = sp_description.value.trim();
+    }
+
+    if (f_description && f_description.value) {
+        f_description.value = f_description.value.trim();
     }
 
     function showForm(selectedValue) {

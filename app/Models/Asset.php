@@ -9,4 +9,8 @@ class Asset extends Model
 {
     use HasFactory;
     protected $table = 'tbl_assets';
+    protected $primaryKey = 'id_asset';
+    protected $fillable = [
+        'status'
+    ];
 }
