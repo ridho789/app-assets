@@ -143,7 +143,7 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, With
 
         $data[] = [
             ['Fuel Expenses'],
-            ['Name', 'Price', 'Date']
+            ['Name', 'Price', 'Date', 'Description']
         ];
         
         if (count($this->fuel) > 0) {
@@ -152,6 +152,7 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, With
                     'Name' => $fuel->name,
                     'Price' => 'IDR ' . number_format($fuel->price ?? 0, 0, ',', '.'),
                     'Date' => date('l, j F Y', strtotime($fuel->date)),
+                    'Description' => $fuel->description,
                 ];
             }
 
