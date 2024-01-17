@@ -36,7 +36,7 @@ class AssetsController extends Controller
         ]);
 
         // dashboard
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function edit($id) {
@@ -82,7 +82,7 @@ class AssetsController extends Controller
         Asset::where('id_asset', $request->id)->update($assetData);
 
         // dashboard
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function report($id) {

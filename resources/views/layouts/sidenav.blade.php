@@ -6,7 +6,7 @@
                     <img src="{{ asset('') }}asset/assets/img/team/profile-picture-3.jpg" class="card-img-top rounded-circle border-white" alt="Bonnie Green">
                 </div>
                 <div class="d-block">
-                    <h2 class="h5 mb-3">Hi, Jane</h2>
+                    <h2 class="h5 mb-3">{{ auth()->user()->name }}</h2>
                     <a href="{{ asset('') }}asset/pages/examples/sign-in.html" class="btn btn-secondary btn-sm d-inline-flex align-items-center">
                         <svg class="icon icon-xxs me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
@@ -33,7 +33,7 @@
                 </a>
             </li>
             <li class="nav-item  active ">
-                <a href="/" class="nav-link">
+                <a href="/dashboard" class="nav-link">
                     <span class="sidebar-icon">
                         <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
@@ -43,7 +43,7 @@
                     <span class="sidebar-text">Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <span class="nav-link  collapsed  d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#submenu-components">
                     <span>
                         <span class="sidebar-icon">
@@ -94,7 +94,7 @@
                         </li>
                     </ul>
                 </div>
-            </li>
+            </li> -->
             <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
             <li class="nav-item">
                 <a href="https://themesberg.com" target="_blank" class="nav-link d-flex align-items-center">

@@ -21,7 +21,7 @@ class DashboardController extends Controller
 
         if ($asset->count() === 0) {
             // dashboard
-            return redirect('/');
+            return redirect('/dashboard');
 
         } else {
             return view('/dashboard', ['assets' => $asset]);
