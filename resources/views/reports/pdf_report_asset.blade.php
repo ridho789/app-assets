@@ -251,6 +251,7 @@
                         <th>Name</th>
                         <th>Date</th>
                         <th>Price</th>
+                        <th>Description</th>
                     </tr>
                 </thead>
                 @if(count($fuel) > 0)
@@ -264,6 +265,7 @@
                             <td>{{$f->name}}</td>
                             <td>{{ date('j F Y', strtotime($f->date)) }}</td>
                             <td>{{ 'IDR ' . number_format($f->price ?? 0, 0, ',', '.') }}</td>
+                            <td>{{$f->description}}</td>
                         </tr>
                         @php
                             $totalFuel += $f->price;

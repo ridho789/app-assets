@@ -83,9 +83,9 @@
             </button>
         </div>
         <div class="btn-group ms-2 ms-lg-3">
-            <a href="{{ url('asset-pdf-report', ['id' => $asset->id_asset]) }}" class="btn btn-outline-primary">
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-preview-pdf">
                 PDF
-            </a>
+            </button>
 
             <a href="{{ url('report-excel', ['id' => $asset->id_asset]) }}" class="btn btn-outline-tertiary">
                 Excel
@@ -295,6 +295,278 @@
                     <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- modal preview pdf -->
+<div class="modal fade" id="modal-preview-pdf" tabindex="-1" role="dialog" aria-labelledby="modal-preview-pdf" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="h6 modal-title">Preview Report - <b>{{ $asset->name }} ({{ $asset->status }})</b></h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body mb-2" style="overflow-x: auto; font-size: small;">
+                <div>
+                    <table class="table">
+                        <tr>
+                            <td>Location</td>
+                            <td>{{ $asset->location }}</td>
+                        </tr>
+                        <tr>
+                            <td>Purchase Date</td>
+                            <td>{{ date('l, j F Y', strtotime($asset->purchase_date)) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Description</td>
+                            <td>{{ $asset->description }}</td>
+                        </tr>
+                    </table>
+
+                    <div class="mt-4">
+                        <h6>Unexpected Expenses</h6>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        @if(count($unexpected) > 0)
+                        <tbody>
+                            @php
+                            $totalUnexpected = 0;
+                            @endphp
+                            @foreach($unexpected as $u)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{$u->name}}</td>
+                                <td>{{ date('j F Y', strtotime($u->date)) }}</td>
+                                <td>{{ 'IDR ' . number_format($u->price ?? 0, 0, ',', '.') }}</td>
+                                <td>{{$u->description}}</td>
+                            </tr>
+                            @php
+                            $totalUnexpected += $u->price;
+                            @endphp
+                            @endforeach
+                        </tbody>
+                        @else
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="center-text">No data available</td>
+                            </tr>
+                        </tbody>
+                        @endif
+                    </table>
+
+                    <div class="total-sub-expense mt-1 mb-4">
+                        <span style="font-size: small;">Total Unexpected Expenses: <b>{{ 'IDR ' . number_format($totalUnexpected ?? 0, 0, ',', '.') }}</b></span>
+                    </div>
+                    <hr>
+
+                    <h6>Materials Expenses</h6>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Purchase Date</th>
+                                <th>Amount</th>
+                                <th>Purchase Price</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        @if(count($material) > 0)
+                        <tbody>
+                            @php
+                            $totalMaterial = 0;
+                            @endphp
+                            @foreach($material as $m)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{$m->name}}</td>
+                                <td>{{ date('j F Y', strtotime($m->purchase_date)) }}</td>
+                                <td>{{$m->amount}}</td>
+                                <td>{{ 'IDR ' . number_format($m->purchase_price ?? 0, 0, ',', '.') }}</td>
+                                <td>{{$m->description}}</td>
+                            </tr>
+                            @php
+                            $totalMaterial += $m->purchase_price;
+                            @endphp
+                            @endforeach
+                        </tbody>
+                        @else
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="center-text">No data available</td>
+                            </tr>
+                        </tbody>
+                        @endif
+                    </table>
+
+                    <div class="total-sub-expense mt-1 mb-4">
+                        <span style="font-size: small;">Total Materials Expenses: <b>{{ 'IDR ' . number_format($totalMaterial ?? 0, 0, ',', '.') }}</b></span>
+                    </div>
+                    <hr>
+
+                    <h6>Salary Expenses</h6>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Period</th>
+                                <th>Date</th>
+                                <th>Amount Paid</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        @if(count($salary) > 0)
+                        <tbody>
+                            @php
+                            $totalSalary = 0;
+                            @endphp
+                            @foreach($salary as $s)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{$s->period}}</td>
+                                <td>{{ date('j F Y', strtotime($s->date)) }}</td>
+                                <td>{{ 'IDR ' . number_format($s->amount_paid ?? 0, 0, ',', '.') }}</td>
+                                <td>{{$s->description}}</td>
+                            </tr>
+                            @php
+                            $totalSalary += $s->amount_paid;
+                            @endphp
+                            @endforeach
+                        </tbody>
+                        @else
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="center-text">No data available</td>
+                            </tr>
+                        </tbody>
+                        @endif
+                    </table>
+
+                    <div class="total-sub-expense mt-1 mb-4">
+                        <span style="font-size: small;">Total Salary Expenses: <b>{{ 'IDR ' . number_format($totalSalary ?? 0, 0, ',', '.') }}</b></span>
+                    </div>
+                    <hr>
+
+                    <h6>Spareparts Expenses</h6>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Purchase Date</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        @if(count($sparepart) > 0)
+                        <tbody>
+                            @php
+                            $totalSparepart = 0;
+                            @endphp
+                            @foreach($sparepart as $sp)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{$sp->name}}</td>
+                                <td>{{ date('j F Y', strtotime($sp->purchase_date)) }}</td>
+                                <td>{{ 'IDR ' . number_format($sp->price ?? 0, 0, ',', '.') }}</td>
+                                <td>{{$sp->description}}</td>
+                            </tr>
+                            @php
+                            $totalSparepart += $sp->price;
+                            @endphp
+                            @endforeach
+                        </tbody>
+                        @else
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="center-text">No data available</td>
+                            </tr>
+                        </tbody>
+                        @endif
+                    </table>
+
+                    <div class="total-sub-expense mt-1 mb-4">
+                        <span style="font-size: small;">Total Spareparts Expenses: <b>{{ 'IDR ' . number_format($totalSparepart ?? 0, 0, ',', '.') }}</b></span>
+                    </div>
+                    <hr>
+
+                    <h6>Fuel Expenses</h6>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        @if(count($fuel) > 0)
+                        <tbody>
+                            @php
+                            $totalFuel = 0;
+                            @endphp
+                            @foreach($fuel as $f)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{$f->name}}</td>
+                                <td>{{ date('j F Y', strtotime($f->date)) }}</td>
+                                <td>{{ 'IDR ' . number_format($f->price ?? 0, 0, ',', '.') }}</td>
+                                <td>{{$f->description}}</td>
+                            </tr>
+                            @php
+                            $totalFuel += $f->price;
+                            @endphp
+                            @endforeach
+                        </tbody>
+                        @else
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="center-text">No data available</td>
+                            </tr>
+                        </tbody>
+                        @endif
+                    </table>
+
+                    <div class="total-sub-expense mt-1 mb-4">
+                        <span style="font-size: small;">Total Fuel Expenses: <b>{{ 'IDR ' . number_format($totalFuel ?? 0, 0, ',', '.') }}</b></span>
+                    </div>
+                    <hr>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                    <div style="display: flex; align-items: baseline; margin-bottom: 10px;">
+                        <span style="width: 150px; display: inline-block;">Purchase Price</span>
+                        <span style="display: inline-block;">: {{ 'IDR ' . number_format($asset->purchase_price ?? 0, 0, ',', '.') }}</span>
+                    </div>
+
+                    <div style="display: flex; align-items: baseline;">
+                        <span style="width: 150px; display: inline-block;">Total Expense</span>
+                        <span style="display: inline-block;">: {{ 'IDR ' . number_format($asset->tot_expenses ?? 0, 0, ',', '.') }}</span>
+                    </div>
+                    <hr>
+                    <div style="display: flex; align-items: baseline;">
+                        <span style="width: 150px; display: inline-block;">Overall Expense</span>
+                        <span style="display: inline-block;">: <b>{{ 'IDR ' . number_format($asset->tot_overall_expenses ?? 0, 0, ',', '.') }}</b></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{{ url('asset-pdf-report', ['id' => $asset->id_asset]) }}" class="btn btn-primary">
+                    Download
+                </a>
+                <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>

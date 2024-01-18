@@ -49,6 +49,12 @@ class AssetsController extends Controller
         $allSparepartExpenses = Sparepart::where('id_asset', $id)->sum('price');
         $allUnexpectedExpenses = Unexpected::where('id_asset', $id)->sum('price');
 
+        $fuel = Fuel::where('id_asset', $id)->orderBy('date', 'asc')->get();
+        $material = Material::where('id_asset', $id)->orderBy('purchase_date', 'asc')->get();
+        $salary = Salary::where('id_asset', $id)->orderBy('date', 'asc')->get();
+        $sparepart = Sparepart::where('id_asset', $id)->orderBy('purchase_date', 'asc')->get();
+        $unexpected = Unexpected::where('id_asset', $id)->orderBy('date', 'asc')->get();
+
         $totalExpenses = $allFuelExpenses + $allMaterialExpenses + $allSalaryExpenses + $allSparepartExpenses + $allUnexpectedExpenses;
 
         // Update total overall expenses
@@ -58,7 +64,8 @@ class AssetsController extends Controller
         ]);
 
         return view('/components/asset', compact(
-            'asset', 'allFuelExpenses', 'allMaterialExpenses', 'allSalaryExpenses', 'allSparepartExpenses', 'allUnexpectedExpenses', 'totalExpenses'
+            'asset', 'allFuelExpenses', 'allMaterialExpenses', 'allSalaryExpenses', 'allSparepartExpenses', 'allUnexpectedExpenses', 'totalExpenses',
+            'fuel', 'material', 'salary', 'sparepart', 'unexpected'
         ));
     }
 
