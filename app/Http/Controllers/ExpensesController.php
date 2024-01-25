@@ -16,84 +16,135 @@ class ExpensesController extends Controller
         $expenseCategory = $request->expense_category;
         
         if($expenseCategory == 'Unexpected') {
-            Unexpected::insert([
-                'id_asset' => $request->id,
-                'name' => $request->ux_name,
-                'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->ux_date)->toDateString(),
-                'price' => $request->ux_price,
-                'description' =>$request->ux_description,
-            ]);
+            $existingUnexpectedRecord = Unexpected::where('id_asset', $request->id)->where('date', \Carbon\Carbon::createFromFormat('m/d/Y', $request->ux_date)->toDateString())->first();
+            if ($existingUnexpectedRecord) {
+                return redirect()->back()->with([
+                    'error' => 'Data for the selected date already exists.',
+                    'error_type' => 'sweet-alert',
+                    'input' => $request->all(),
+                ]);
 
-            return redirect()->back();
+            } else {
+                Unexpected::insert([
+                    'id_asset' => $request->id,
+                    'name' => $request->ux_name,
+                    'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->ux_date)->toDateString(),
+                    'price' => $request->ux_price,
+                    'description' =>$request->ux_description,
+                ]);
+    
+                return redirect()->back();
+            }
         }
 
         if($expenseCategory == 'Material') {
-            Material::insert([
-                'id_asset' => $request->id,
-                'name' => $request->m_name,
-                'purchase_date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->m_purchase_date)->toDateString(),
-                'amount' => $request->m_amount,
-                'purchase_price' => $request->m_purchase_price,
-                'description' =>$request->m_description,
-            ]);
+            $existingMaterialRecord = Material::where('id_asset', $request->id)->where('purchase_date', \Carbon\Carbon::createFromFormat('m/d/Y', $request->m_purchase_date)->toDateString())->first();
+            if ($existingMaterialRecord) {
+                return redirect()->back()->with([
+                    'error' => 'Data for the selected purchase date already exists.',
+                    'error_type' => 'sweet-alert',
+                    'input' => $request->all(),
+                ]);
 
-            $asset = Asset::where('id_asset', $request->id)->first();
-            if ($asset->status === 'No Activity') {
-                $asset->update(['status' => 'On Progress']);
+            } else {
+                Material::insert([
+                    'id_asset' => $request->id,
+                    'name' => $request->m_name,
+                    'purchase_date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->m_purchase_date)->toDateString(),
+                    'amount' => $request->m_amount,
+                    'purchase_price' => $request->m_purchase_price,
+                    'description' =>$request->m_description,
+                ]);
+
+                $asset = Asset::where('id_asset', $request->id)->first();
+                if ($asset->status === 'No Activity') {
+                    $asset->update(['status' => 'On Progress']);
+                }
+    
+                return redirect()->back();
             }
 
-            return redirect()->back();
         }
 
         if($expenseCategory == 'Salary') {
-            Salary::insert([
-                'id_asset' => $request->id,
-                'period' => $request->s_period,
-                'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->s_date)->toDateString(),
-                'amount_paid' => $request->s_amount_paid,
-                'description' =>$request->s_description,
-            ]);
+            $existingSalaryRecord = Salary::where('id_asset', $request->id)->where('date', \Carbon\Carbon::createFromFormat('m/d/Y', $request->s_date)->toDateString())->first();
+            if ($existingSalaryRecord) {
+                return redirect()->back()->with([
+                    'error' => 'Data for the selected date already exists.',
+                    'error_type' => 'sweet-alert',
+                    'input' => $request->all(),
+                ]);
 
-            $asset = Asset::where('id_asset', $request->id)->first();
-            if ($asset->status === 'No Activity') {
-                $asset->update(['status' => 'On Progress']);
+            } else {
+                Salary::insert([
+                    'id_asset' => $request->id,
+                    'period' => $request->s_period,
+                    'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->s_date)->toDateString(),
+                    'amount_paid' => $request->s_amount_paid,
+                    'description' =>$request->s_description,
+                ]);
+                
+                $asset = Asset::where('id_asset', $request->id)->first();
+                if ($asset->status === 'No Activity') {
+                    $asset->update(['status' => 'On Progress']);
+                }
+    
+                return redirect()->back();
             }
-
-            return redirect()->back();
         }
 
         if($expenseCategory == 'Sparepart') {
-            Sparepart::insert([
-                'id_asset' => $request->id,
-                'name' => $request->sp_name,
-                'purchase_date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->sp_purchase_date)->toDateString(),
-                'price' => $request->sp_price,
-                'description' =>$request->sp_description,
-            ]);
+            $existingSparepartRecord = Sparepart::where('id_asset', $request->id)->where('purchase_date', \Carbon\Carbon::createFromFormat('m/d/Y', $request->sp_purchase_date)->toDateString())->first();
+            if ($existingSparepartRecord) {
+                return redirect()->back()->with([
+                    'error' => 'Data for the selected date purchase already exists.',
+                    'error_type' => 'sweet-alert',
+                    'input' => $request->all(),
+                ]);
 
-            $asset = Asset::where('id_asset', $request->id)->first();
-            if ($asset->status === 'No Activity') {
-                $asset->update(['status' => 'On Progress']);
+            } else {
+                Sparepart::insert([
+                    'id_asset' => $request->id,
+                    'name' => $request->sp_name,
+                    'purchase_date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->sp_purchase_date)->toDateString(),
+                    'price' => $request->sp_price,
+                    'description' =>$request->sp_description,
+                ]);
+    
+                $asset = Asset::where('id_asset', $request->id)->first();
+                if ($asset->status === 'No Activity') {
+                    $asset->update(['status' => 'On Progress']);
+                }
+    
+                return redirect()->back();
             }
-
-            return redirect()->back();
         }
 
         if($expenseCategory == 'Fuel') {
-            Fuel::insert([
-                'id_asset' => $request->id,
-                'name' => $request->f_name,
-                'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->f_date)->toDateString(),
-                'price' => $request->f_price,
-                'description' =>$request->f_description,
-            ]);
+            $existingFuelRecord = Fuel::where('id_asset', $request->id)->where('date', \Carbon\Carbon::createFromFormat('m/d/Y', $request->f_date)->toDateString())->first();
+            if ($existingFuelRecord) {
+                return redirect()->back()->with([
+                    'error' => 'Data for the selected date already exists.',
+                    'error_type' => 'sweet-alert',
+                    'input' => $request->all(),
+                ]);
 
-            $asset = Asset::where('id_asset', $request->id)->first();
-            if ($asset->status === 'No Activity') {
-                $asset->update(['status' => 'On Progress']);
+            } else {
+                Fuel::insert([
+                    'id_asset' => $request->id,
+                    'name' => $request->f_name,
+                    'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->f_date)->toDateString(),
+                    'price' => $request->f_price,
+                    'description' =>$request->f_description,
+                ]);
+    
+                $asset = Asset::where('id_asset', $request->id)->first();
+                if ($asset->status === 'No Activity') {
+                    $asset->update(['status' => 'On Progress']);
+                }
+    
+                return redirect()->back();
             }
-
-            return redirect()->back();
         }
     }
 }
