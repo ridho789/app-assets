@@ -47,18 +47,23 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/unexpected-index/{id_asset}', [UnexpectedController::class, 'index'])->middleware('auth');
     Route::post('unexpected-update', [UnexpectedController::class, 'update']);
+    Route::get('unexpected-delete/{id_unexpected}', [UnexpectedController::class, 'delete']);
     
     Route::get('/material-index/{id_asset}', [MaterialsController::class, 'index'])->middleware('auth');
     Route::post('material-update', [MaterialsController::class, 'update']);
+    Route::get('material-delete/{id_material}', [MaterialsController::class, 'delete']);
     
     Route::get('/salary-index/{id_asset}', [SalaryController::class, 'index'])->middleware('auth');
     Route::post('salary-update', [SalaryController::class, 'update']);
+    Route::get('salary-delete/{id_salary}', [SalaryController::class, 'delete']);
     
     Route::get('/sparepart-index/{id_asset}', [SparepartsController::class, 'index'])->middleware('auth');
     Route::post('sparepart-update', [SparepartsController::class, 'update']);
+    Route::get('sparepart-delete/{id_sparepart}', [SparepartsController::class, 'delete']);
     
     Route::get('/fuel-index/{id_asset}', [FuelController::class, 'index'])->middleware('auth');
     Route::post('fuel-update', [FuelController::class, 'update']);
+    Route::get('fuel-delete/{id_fuel}', [FuelController::class, 'delete']);
     
     // report
     Route::get('asset-pdf-report/{id_asset}', [AssetsController::class, 'report']);

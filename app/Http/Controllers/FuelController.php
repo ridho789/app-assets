@@ -28,4 +28,9 @@ class FuelController extends Controller
         Fuel::where('id_fuel', $request->id)->update($fueltData);
         return redirect()->back();
     }
+
+    public function delete($id) {
+        Fuel::where('id_fuel', $id)->delete();
+        return redirect()->back();
+    }
 }

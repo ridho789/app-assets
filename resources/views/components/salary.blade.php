@@ -85,6 +85,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                @if (count($salary) > 0)
                     @foreach($salary as $s)
                     <tr data-id="{{ $s->id_salary }}">
                         <td>{{ $loop->iteration }}</td>
@@ -93,12 +94,22 @@
                         <td class="salary-amount-paid">{{ 'IDR ' . number_format($s->amount_paid ?? 0, 0, ',', '.') }}</td>
                         <td class="salary-description">{{ $s->description }}</td>
                         <td>
-                            <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-salary">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
+                            <div class="d-flex">
+                                <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-salary">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <a href="{{ url('salary-delete/' . $s->id_salary) }}" 
+                                    class="btn btn-icon-only btn btn-danger btn-sm delete-button ms-2" onclick="return confirmDelete()"><i class="fa fa-trash"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
+                @else
+                    <tr>
+                        <td colspan="6">No data available</td>
+                    </tr>
+                @endif
                 </tbody>
             </table>
         </div>
@@ -106,6 +117,10 @@
 </div>
 
 <script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this data?');
+    }
+    
     const s_description = document.getElementById('s_description');
     if (s_description && s_description.value) {
         s_description.value = s_description.value.trim();

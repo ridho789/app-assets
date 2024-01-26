@@ -85,6 +85,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                @if (count($sparepart) > 0)
                     @foreach($sparepart as $sp)
                     <tr data-id="{{ $sp->id_sparepart  }}">
                         <td>{{ $loop->iteration }}</td>
@@ -93,12 +94,22 @@
                         <td class="sparepart-price">{{ 'IDR ' . number_format($sp->price ?? 0, 0, ',', '.') }}</td>
                         <td class="sparepart-description">{{ $sp->description }}</td>
                         <td>
-                            <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-sparepart">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
+                            <div class="d-flex">
+                                <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-sparepart">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <a href="{{ url('sparepart-delete/' . $sp->id_sparepart) }}" 
+                                    class="btn btn-icon-only btn btn-danger btn-sm delete-button ms-2" onclick="return confirmDelete()"><i class="fa fa-trash"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
+                @else
+                    <tr>
+                        <td colspan="6">No data available</td>
+                    </tr>
+                @endif
                 </tbody>
             </table>
         </div>
@@ -106,6 +117,10 @@
 </div>
 
 <script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this data?');
+    }
+
     const sp_description = document.getElementById('sp_description');
     if (sp_description && sp_description.value) {
         sp_description.value = sp_description.value.trim();

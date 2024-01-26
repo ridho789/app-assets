@@ -89,6 +89,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                @if (count($unexpected) > 0)
                     @foreach($unexpected as $u)
                     <tr data-id="{{ $u->id_unexpected_expenses }}">
                         <td>{{ $loop->iteration }}</td>
@@ -97,12 +98,22 @@
                         <td class="unexpected-price">{{ 'IDR ' . number_format($u->price ?? 0, 0, ',', '.') }}</td>
                         <td class="unexpected-description">{{ $u->description }}</td>
                         <td>
-                            <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-unexpected">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
+                            <div class="d-flex">
+                                <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-unexpected">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <a href="{{ url('unexpected-delete/' . $u->id_unexpected_expenses) }}" 
+                                    class="btn btn-icon-only btn btn-danger btn-sm delete-button ms-2" onclick="return confirmDelete()"><i class="fa fa-trash"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
+                @else
+                    <tr>
+                        <td colspan="6">No data available</td>
+                    </tr>
+                @endif
                 </tbody>
             </table>
         </div>
@@ -110,6 +121,10 @@
 </div>
 
 <script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this data?');
+    }
+
     const ux_description = document.getElementById('ux_description');
 
     if (ux_description && ux_description.value) {

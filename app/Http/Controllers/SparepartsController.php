@@ -28,4 +28,9 @@ class SparepartsController extends Controller
         Sparepart::where('id_sparepart', $request->id)->update($sparepartData);
         return redirect()->back();
     }
+
+    public function delete($id) {
+        Sparepart::where('id_sparepart', $id)->delete();
+        return redirect()->back();
+    }
 }

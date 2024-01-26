@@ -85,6 +85,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                @if (count($fuel) > 0)
                     @foreach($fuel as $f)
                     <tr data-id="{{ $f->id_fuel }}">
                         <td>{{ $loop->iteration }}</td>
@@ -93,12 +94,22 @@
                         <td class="fuel-price">{{ 'IDR ' . number_format($f->price ?? 0, 0, ',', '.') }}</td>
                         <td class="fuel-description">{{ $f->description }}</td>
                         <td>
-                            <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-fuel">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
+                            <div class="d-flex">
+                                <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-fuel">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <a href="{{ url('fuel-delete/' . $f->id_fuel) }}" 
+                                    class="btn btn-icon-only btn btn-danger btn-sm delete-button ms-2" onclick="return confirmDelete()"><i class="fa fa-trash"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
+                @else
+                    <tr>
+                        <td colspan="6">No data available</td>
+                    </tr>
+                @endif
                 </tbody>
             </table>
         </div>
@@ -106,6 +117,10 @@
 </div>
 
 <script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this data?');
+    }
+
     const m_description = document.getElementById('f_description');
     if (f_description && f_description.value) {
         f_description.value = f_description.value.trim();

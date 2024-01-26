@@ -29,4 +29,9 @@ class MaterialsController extends Controller
         Material::where('id_material', $request->id)->update($materialData);
         return redirect()->back();
     }
+
+    public function delete($id) {
+        Material::where('id_material', $id)->delete();
+        return redirect()->back();
+    }
 }

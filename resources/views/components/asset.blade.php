@@ -711,23 +711,6 @@
         </form>
     </div>
 </div>
-
-@if(session('error_type') == 'sweet-alert')
-    <div class="alert" id="errorAlert" style="display: none;">
-        <strong>Error!</strong> {{ session('error') }}
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: '{{ session('error') }}',
-            });
-        });
-    </script>
-@endif
-
 @endif
 
 <script>

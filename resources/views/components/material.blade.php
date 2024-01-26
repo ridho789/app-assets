@@ -93,6 +93,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                @if (count($material) > 0)
                     @foreach($material as $m)
                     <tr data-id="{{ $m->id_material }}">
                         <td>{{ $loop->iteration }}</td>
@@ -102,12 +103,22 @@
                         <td class="material-purchase-price">{{ 'IDR ' . number_format($m->purchase_price ?? 0, 0, ',', '.') }}</td>
                         <td class="material-description">{{ $m->description }}</td>
                         <td>
-                            <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-material">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
+                            <div class="d-flex">
+                                <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-material">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <a href="{{ url('material-delete/' . $m->id_material) }}" 
+                                    class="btn btn-icon-only btn btn-danger btn-sm delete-button ms-2" onclick="return confirmDelete()"><i class="fa fa-trash"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
+                @else
+                    <tr>
+                        <td colspan="6">No data available</td>
+                    </tr>
+                @endif
                 </tbody>
             </table>
         </div>
@@ -115,6 +126,10 @@
 </div>
 
 <script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this data?');
+    }
+
     const m_description = document.getElementById('m_description');
     if (m_description && m_description.value) {
         m_description.value = m_description.value.trim();

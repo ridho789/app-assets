@@ -60,7 +60,7 @@
                                                 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd">
                                         </path>
                                     </svg>
-                                    {{$asset->location}}
+                                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;">{{$asset->location}}</span>
                                 </small>
                                 <div class="small d-flex mt-1">
                                     <div>Overall Expenses 

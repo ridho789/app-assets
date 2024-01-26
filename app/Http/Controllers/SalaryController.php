@@ -28,4 +28,9 @@ class SalaryController extends Controller
         Salary::where('id_salary', $request->id)->update($salaryData);
         return redirect()->back();
     }
+
+    public function delete($id) {
+        Salary::where('id_salary', $id)->delete();
+        return redirect()->back();
+    }
 }

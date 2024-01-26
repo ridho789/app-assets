@@ -28,4 +28,9 @@ class UnexpectedController extends Controller
         Unexpected::where('id_unexpected_expenses', $request->id)->update($unexpectedData);
         return redirect()->back();
     }
+
+    public function delete($id) {
+        Unexpected::where('id_unexpected_expenses', $id)->delete();
+        return redirect()->back();
+    }
 }
