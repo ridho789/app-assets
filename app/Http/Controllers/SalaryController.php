@@ -12,7 +12,7 @@ class SalaryController extends Controller
     public function index($id) {
         $id = Crypt::decrypt($id);
         $asset = Asset::where('id_asset', $id)->first();
-        $salary = Salary::where('id_asset', $id)->orderBy('date', 'asc')->get();
+        $salary = Salary::where('id_asset', $id)->orderBy('period', 'asc')->orderBy('date', 'asc')->get();
 
         return view('/components/salary', compact('asset', 'salary'));
     }

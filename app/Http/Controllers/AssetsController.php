@@ -49,11 +49,11 @@ class AssetsController extends Controller
         $allSparepartExpenses = Sparepart::where('id_asset', $id)->sum('price');
         $allUnexpectedExpenses = Unexpected::where('id_asset', $id)->sum('price');
 
-        $fuel = Fuel::where('id_asset', $id)->orderBy('date', 'asc')->get();
-        $material = Material::where('id_asset', $id)->orderBy('purchase_date', 'asc')->get();
-        $salary = Salary::where('id_asset', $id)->orderBy('date', 'asc')->get();
-        $sparepart = Sparepart::where('id_asset', $id)->orderBy('purchase_date', 'asc')->get();
-        $unexpected = Unexpected::where('id_asset', $id)->orderBy('date', 'asc')->get();
+        $fuel = Fuel::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
+        $material = Material::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('purchase_date', 'asc')->get();
+        $salary = Salary::where('id_asset', $id)->orderBy('period', 'asc')->orderBy('date', 'asc')->get();
+        $sparepart = Sparepart::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('purchase_date', 'asc')->get();
+        $unexpected = Unexpected::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
 
         $totalExpenses = $allFuelExpenses + $allMaterialExpenses + $allSalaryExpenses + $allSparepartExpenses + $allUnexpectedExpenses;
 
@@ -94,11 +94,11 @@ class AssetsController extends Controller
 
     public function report($id) {
         $asset = Asset::where('id_asset', $id)->first();
-        $fuel = Fuel::where('id_asset', $id)->orderBy('date', 'asc')->get();
-        $material = Material::where('id_asset', $id)->orderBy('purchase_date', 'asc')->get();
-        $salary = Salary::where('id_asset', $id)->orderBy('date', 'asc')->get();
-        $sparepart = Sparepart::where('id_asset', $id)->orderBy('purchase_date', 'asc')->get();
-        $unexpected = Unexpected::where('id_asset', $id)->orderBy('date', 'asc')->get();
+        $fuel = Fuel::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
+        $material = Material::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('purchase_date', 'asc')->get();
+        $salary = Salary::where('id_asset', $id)->orderBy('period', 'asc')->orderBy('date', 'asc')->get();
+        $sparepart = Sparepart::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('purchase_date', 'asc')->get();
+        $unexpected = Unexpected::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
 
         $pdf = PDF::loadView('reports.pdf_report_asset', compact(
             'asset', 'fuel', 'material', 'salary', 'sparepart', 'unexpected'

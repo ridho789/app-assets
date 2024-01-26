@@ -12,7 +12,7 @@ class FuelController extends Controller
     public function index($id) {
         $id = Crypt::decrypt($id);
         $asset = Asset::where('id_asset', $id)->first();
-        $fuel = Fuel::where('id_asset', $id)->orderBy('date', 'asc')->get();
+        $fuel = Fuel::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
 
         return view('/components/fuel', compact('asset', 'fuel'));
     }
