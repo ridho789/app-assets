@@ -104,7 +104,7 @@ class AssetsController extends Controller
             'asset', 'fuel', 'material', 'salary', 'sparepart', 'unexpected'
         ))->setPaper('a4', 'landscape');
 
-        return $pdf->download('Report Asset - ' . $asset->name . '.pdf');
+        return $pdf->download('Report Asset (With Details) - ' . $asset->name . '.pdf');
     }
 
     public function report_without_details($id) {
@@ -150,6 +150,6 @@ class AssetsController extends Controller
             'totalMaterialPricePerYear', 'totalSalaryPricePerYear', 'totalSparepartPricePerYear', 'totalUnexpectedPricePerYear'
         ))->setPaper('a4', 'landscape');
 
-        return $pdf->download('Report Asset - ' . $asset->name . '.pdf');
+        return $pdf->download('Report Asset (Without Details) - ' . $asset->name . '.pdf');
     }
 }

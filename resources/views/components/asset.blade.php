@@ -87,9 +87,13 @@
                 PDF
             </button>
 
-            <a href="{{ url('report-excel', ['id' => $asset->id_asset]) }}" class="btn btn-outline-tertiary">
+            <!-- <a href="{{ url('report-excel', ['id' => $asset->id_asset]) }}" class="btn btn-outline-tertiary">
                 Excel
-            </a>
+            </a> -->
+
+            <button class="btn btn-outline-tertiary" data-bs-toggle="modal" data-bs-target="#modal-excel">
+                Excel
+            </button>
         </div>
     </div>
 </div>
@@ -569,6 +573,24 @@
                     Download Without Details
                 </a>
                 <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal excel -->
+<div class="modal fade" id="modal-excel" tabindex="-1" role="dialog" aria-labelledby="modal-excel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="h6 modal-title">Select Excel Report Type</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- <div class="modal-body mb-2">
+            </div> -->
+            <div class="modal-footer">
+                <a href="{{ url('report-excel', ['id' => $asset->id_asset]) }}" class="btn btn-primary">Download With Details</a>
+                <a href="{{ url('report-excel-without-details', ['id' => $asset->id_asset]) }}" class="btn btn-secondary ms-auto">Download Without Details</a>
             </div>
         </div>
     </div>

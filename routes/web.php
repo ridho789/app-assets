@@ -69,4 +69,5 @@ Route::middleware('auth')->group(function () {
     Route::get('asset-pdf-report-with-details/{id_asset}', [AssetsController::class, 'report_with_details']);
     Route::get('asset-pdf-report-without-details/{id_asset}', [AssetsController::class, 'report_without_details']);
     Route::get('report-excel/{id}', [ReportController::class, 'reportExcel']);
+    Route::get('report-excel-without-details/{id}', [ReportController::class, 'reportExcelWithoutDetails']);
 });
