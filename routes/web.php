@@ -66,6 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::get('fuel-delete/{id_fuel}', [FuelController::class, 'delete']);
     
     // report
-    Route::get('asset-pdf-report/{id_asset}', [AssetsController::class, 'report']);
+    Route::get('asset-pdf-report-with-details/{id_asset}', [AssetsController::class, 'report_with_details']);
+    Route::get('asset-pdf-report-without-details/{id_asset}', [AssetsController::class, 'report_without_details']);
     Route::get('report-excel/{id}', [ReportController::class, 'reportExcel']);
 });

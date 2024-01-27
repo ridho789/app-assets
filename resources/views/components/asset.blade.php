@@ -562,8 +562,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="{{ url('asset-pdf-report', ['id' => $asset->id_asset]) }}" class="btn btn-primary">
-                    Download
+                <a href="{{ url('asset-pdf-report-with-details', ['id' => $asset->id_asset]) }}" class="btn btn-primary">
+                    Download With Details
+                </a>
+                <a href="{{ url('asset-pdf-report-without-details', ['id' => $asset->id_asset]) }}" class="btn btn-secondary">
+                    Download Without Details
                 </a>
                 <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
             </div>
