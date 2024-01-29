@@ -89,10 +89,10 @@
                     @foreach($fuel as $f)
                     <tr data-id="{{ $f->id_fuel }}">
                         <td>{{ $loop->iteration }}</td>
-                        <td class="fuel-name">{{ $f->name }}</td>
+                        <td class="fuel-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $f->name }}</td>
                         <td class="fuel-date">{{ date('j F Y', strtotime($f->date)) }}</td>
                         <td class="fuel-price">{{ 'IDR ' . number_format($f->price ?? 0, 0, ',', '.') }}</td>
-                        <td class="fuel-description">{{ $f->description }}</td>
+                        <td class="fuel-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $f->description }}</td>
                         <td>
                             <div class="d-flex">
                                 <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-fuel">

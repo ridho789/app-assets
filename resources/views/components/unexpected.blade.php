@@ -93,10 +93,10 @@
                     @foreach($unexpected as $u)
                     <tr data-id="{{ $u->id_unexpected_expenses }}">
                         <td>{{ $loop->iteration }}</td>
-                        <td class="unexpected-name">{{ $u->name }}</td>
+                        <td class="unexpected-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $u->name }}</td>
                         <td class="unexpected-date">{{ date('j F Y', strtotime($u->date)) }}</td>
                         <td class="unexpected-price">{{ 'IDR ' . number_format($u->price ?? 0, 0, ',', '.') }}</td>
-                        <td class="unexpected-description">{{ $u->description }}</td>
+                        <td class="unexpected-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $u->description }}</td>
                         <td>
                             <div class="d-flex">
                                 <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-unexpected">

@@ -89,10 +89,10 @@
                     @foreach($salary as $s)
                     <tr data-id="{{ $s->id_salary }}">
                         <td>{{ $loop->iteration }}</td>
-                        <td class="salary-period">{{ $s->period }}</td>
+                        <td class="salary-period" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $s->period }}</td>
                         <td class="salary-date">{{ date('j F Y', strtotime($s->date)) }}</td>
                         <td class="salary-amount-paid">{{ 'IDR ' . number_format($s->amount_paid ?? 0, 0, ',', '.') }}</td>
-                        <td class="salary-description">{{ $s->description }}</td>
+                        <td class="salary-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $s->description }}</td>
                         <td>
                             <div class="d-flex">
                                 <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-salary">

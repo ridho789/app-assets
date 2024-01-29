@@ -97,11 +97,11 @@
                     @foreach($material as $m)
                     <tr data-id="{{ $m->id_material }}">
                         <td>{{ $loop->iteration }}</td>
-                        <td class="material-name">{{ $m->name }}</td>
+                        <td class="material-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $m->name }}</td>
                         <td class="material-purchase-date">{{ date('j F Y', strtotime($m->purchase_date)) }}</td>
                         <td class="material-amount">{{ $m->amount }}</td>
                         <td class="material-purchase-price">{{ 'IDR ' . number_format($m->purchase_price ?? 0, 0, ',', '.') }}</td>
-                        <td class="material-description">{{ $m->description }}</td>
+                        <td class="material-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $m->description }}</td>
                         <td>
                             <div class="d-flex">
                                 <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-material">

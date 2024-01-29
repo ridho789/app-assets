@@ -89,10 +89,10 @@
                     @foreach($sparepart as $sp)
                     <tr data-id="{{ $sp->id_sparepart  }}">
                         <td>{{ $loop->iteration }}</td>
-                        <td class="sparepart-name">{{ $sp->name }}</td>
+                        <td class="sparepart-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $sp->name }}</td>
                         <td class="sparepart-purchase-date">{{ date('j F Y', strtotime($sp->purchase_date)) }}</td>
                         <td class="sparepart-price">{{ 'IDR ' . number_format($sp->price ?? 0, 0, ',', '.') }}</td>
-                        <td class="sparepart-description">{{ $sp->description }}</td>
+                        <td class="sparepart-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $sp->description }}</td>
                         <td>
                             <div class="d-flex">
                                 <button class="btn btn-icon-only btn btn-primary btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#modal-edit-sparepart">
