@@ -67,6 +67,8 @@ class ReportExportExcelWithoutDetails implements FromCollection, ShouldAutoSize,
             $headerRow->push($year);
         }
 
+        $headerRow->push('Total');
+
         // Prepare data for the spreadsheet
         $data = collect([
             [$this->asset->name . ' (' . $this->asset->status . ')'],
@@ -84,6 +86,9 @@ class ReportExportExcelWithoutDetails implements FromCollection, ShouldAutoSize,
         foreach ($combinedYears as $year) {
             $unexpectedExpensesRow->push($this->formatPriceIDR($unexpectedExpenses[$year] ?? 0));
         }
+        
+        $unexpectedTotalAllYears = $unexpectedExpenses->sum();
+        $unexpectedExpensesRow->push($this->formatPriceIDR($unexpectedTotalAllYears));
         $data->push($unexpectedExpensesRow);
 
         // Calculate and merge total expenses for Materials
@@ -91,6 +96,9 @@ class ReportExportExcelWithoutDetails implements FromCollection, ShouldAutoSize,
         foreach ($combinedYears as $year) {
             $materialsExpensesRow->push($this->formatPriceIDR($materialsExpenses[$year] ?? 0));
         }
+
+        $materialsTotalAllYears = $materialsExpenses->sum();
+        $materialsExpensesRow->push($this->formatPriceIDR($materialsTotalAllYears));
         $data->push($materialsExpensesRow);
 
         // Calculate and merge total expenses for Salary
@@ -98,6 +106,9 @@ class ReportExportExcelWithoutDetails implements FromCollection, ShouldAutoSize,
         foreach ($combinedYears as $year) {
             $salaryExpensesRow->push($this->formatPriceIDR($salaryExpenses[$year] ?? 0));
         }
+
+        $salaryTotalAllYears = $salaryExpenses->sum();
+        $salaryExpensesRow->push($this->formatPriceIDR($salaryTotalAllYears));
         $data->push($salaryExpensesRow);
 
         // Calculate and merge total expenses for Spare Parts
@@ -105,6 +116,9 @@ class ReportExportExcelWithoutDetails implements FromCollection, ShouldAutoSize,
         foreach ($combinedYears as $year) {
             $sparepartsExpensesRow->push($this->formatPriceIDR($sparepartsExpenses[$year] ?? 0));
         }
+
+        $sparepartsTotalAllYears = $sparepartsExpenses->sum();
+        $sparepartsExpensesRow->push($this->formatPriceIDR($sparepartsTotalAllYears));
         $data->push($sparepartsExpensesRow);
 
         // Calculate and merge total expenses for Fuel
@@ -112,18 +126,23 @@ class ReportExportExcelWithoutDetails implements FromCollection, ShouldAutoSize,
         foreach ($combinedYears as $year) {
             $fuelExpensesRow->push($this->formatPriceIDR($fuelExpenses[$year] ?? 0));
         }
+
+        $fuelTotalAllYears = $fuelExpenses->sum();
+        $fuelExpensesRow->push($this->formatPriceIDR($fuelTotalAllYears));
         $data->push($fuelExpensesRow);
 
         $data->push(['']);
-        $data->push(['Purchase Price' => 'Purchase Price: IDR ' . number_format($this->asset->purchase_price ?? 0, 0, ',', '.')]);
-        $data->push(['Total Expenses' => 'Total Expenses: IDR ' . number_format($this->asset->tot_expenses ?? 0, 0, ',', '.')]);
-        $data->push(['Overall Expenses' => 'Overall Expenses: IDR ' . number_format($this->asset->tot_overall_expenses ?? 0, 0, ',', '.')]);
+        $data->push([
+            ['Title' => 'Purchase Price', 'Value' => 'IDR ' . number_format($this->asset->purchase_price ?? 0, 0, ',', '.')],
+            ['Title' => 'Total Expenses', 'Value' => 'IDR ' . number_format($this->asset->tot_expenses ?? 0, 0, ',', '.')],
+            ['Title' => 'Overall Expenses', 'Value' => 'IDR ' . number_format($this->asset->tot_overall_expenses ?? 0, 0, ',', '.')]
+        ]);
 
         return $data;
     }
 
     public function styles(Worksheet $sheet)
-    {
+    {   
         return [
             1 => [
                 'font' => ['bold' => true, 'size' => 12],
