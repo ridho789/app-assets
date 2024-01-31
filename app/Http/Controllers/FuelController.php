@@ -33,4 +33,18 @@ class FuelController extends Controller
         Fuel::where('id_fuel', $id)->delete();
         return redirect()->back();
     }
+
+    public function search(Request $request, $id) {
+        $search = $request->search;
+        $id = Crypt::decrypt($id);
+        $asset = Asset::where('id_asset', $id)->first();
+
+        $fuel = Fuel::where('id_asset', $id)->where('date', 'like', "%$search%")->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
+
+        if ($fuel->isEmpty()) {
+            return redirect()->back();
+        }
+
+        return view('/components/fuel', compact('asset', 'fuel'));
+    }
 }

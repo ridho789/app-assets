@@ -33,4 +33,18 @@ class UnexpectedController extends Controller
         Unexpected::where('id_unexpected_expenses', $id)->delete();
         return redirect()->back();
     }
+
+    public function search(Request $request, $id) {
+        $search = $request->search;
+        $id = Crypt::decrypt($id);
+        $asset = Asset::where('id_asset', $id)->first();
+
+        $unexpected = Unexpected::where('id_asset', $id)->where('date', 'like', "%$search%")->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
+
+        if ($unexpected->isEmpty()) {
+            return redirect()->back();
+        }
+
+        return view('/components/unexpected', compact('asset', 'unexpected'));
+    }
 }

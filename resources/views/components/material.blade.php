@@ -77,6 +77,22 @@
 </div>
 <!-- End of Modal Content -->
 
+@if (count($material) > 0)
+<div class="row justify-content-between align-items-center mb-4">
+    <div class="col-9 col-lg-8 d-md-flex">
+        <form action="{{ url('material-search', ['id' => Crypt::encrypt($asset->id_asset)]) }}" method="GET">
+            <div class="input-group me-2 me-lg-3 fmxw-300">
+                <span class="input-group-text">
+                    <i class="fa fa-search"></i>
+                </span>
+                <input type="text" name="search" class="form-control" placeholder="Search date">
+            </div>
+            <h6 class="mt-2">Format search date: <i>mm-dd-yy</i> / <i>mm</i> / <i>dd</i> / <i>yy</i></h6>
+        </form>
+    </div>
+</div>
+@endif
+
 <div class="card border-0 shadow mb-4">
     <div class="card-body">
         <div class="table-responsive">

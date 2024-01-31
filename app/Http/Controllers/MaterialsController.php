@@ -34,4 +34,18 @@ class MaterialsController extends Controller
         Material::where('id_material', $id)->delete();
         return redirect()->back();
     }
+
+    public function search(Request $request, $id) {
+        $search = $request->search;
+        $id = Crypt::decrypt($id);
+        $asset = Asset::where('id_asset', $id)->first();
+
+        $material = Material::where('id_asset', $id)->where('purchase_date', 'like', "%$search%")->orderBy('name', 'asc')->orderBy('purchase_date', 'asc')->get();
+
+        if ($material->isEmpty()) {
+            return redirect()->back();
+        }
+
+        return view('/components/material', compact('asset', 'material'));
+    }
 }

@@ -33,4 +33,18 @@ class SparepartsController extends Controller
         Sparepart::where('id_sparepart', $id)->delete();
         return redirect()->back();
     }
+
+    public function search(Request $request, $id) {
+        $search = $request->search;
+        $id = Crypt::decrypt($id);
+        $asset = Asset::where('id_asset', $id)->first();
+
+        $sparepart = Sparepart::where('id_asset', $id)->where('purchase_date', 'like', "%$search%")->orderBy('name', 'asc')->orderBy('purchase_date', 'asc')->get();
+
+        if ($sparepart->isEmpty()) {
+            return redirect()->back();
+        }
+
+        return view('/components/sparepart', compact('asset', 'sparepart'));
+    }
 }
