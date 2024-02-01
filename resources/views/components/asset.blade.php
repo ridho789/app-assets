@@ -142,7 +142,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="ux_price" class="form-label">Price</label>
-                            <input type="number" class="form-control  @error('ux_price') is-invalid @enderror" id="ux_price" name="ux_price" placeholder="Enter a price..." value="{{ old('ux_price') }}" required>
+                            <input type="text" class="form-control input-ux-price  @error('ux_price') is-invalid @enderror" id="ux_price" name="ux_price" placeholder="Enter a price..." value="{{ old('ux_price') }}" required>
                             @error('ux_price')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -182,7 +182,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="m_purchase_price" class="form-label">Purchase Price</label>
-                            <input type="number" class="form-control  @error('m_purchase_price') is-invalid @enderror" id="m_purchase_price" name="m_purchase_price" placeholder="Enter a purchase price..." value="{{ old('m_purchase_price') }}" required>
+                            <input type="text" class="form-control  @error('m_purchase_price') is-invalid @enderror" id="m_purchase_price" name="m_purchase_price" placeholder="Enter a purchase price..." value="{{ old('m_purchase_price') }}" required>
                             @error('m_purchase_price')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -215,7 +215,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="s_amount_paid" class="form-label">Amount Paid</label>
-                            <input type="number" class="form-control  @error('s_amount_paid') is-invalid @enderror" id="s_amount_paid" name="s_amount_paid" placeholder="Enter the amount paid..." value="{{ old('s_amount_paid') }}" required>
+                            <input type="text" class="form-control  @error('s_amount_paid') is-invalid @enderror" id="s_amount_paid" name="s_amount_paid" placeholder="Enter the amount paid..." value="{{ old('s_amount_paid') }}" required>
                             @error('s_amount_paid')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -248,7 +248,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="sp_price" class="form-label">Price</label>
-                            <input type="number" class="form-control  @error('sp_price') is-invalid @enderror" id="sp_price" name="sp_price" placeholder="Enter a price..." value="{{ old('sp_price') }}" required>
+                            <input type="text" class="form-control  @error('sp_price') is-invalid @enderror" id="sp_price" name="sp_price" placeholder="Enter a price..." value="{{ old('sp_price') }}" required>
                             @error('sp_price')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -281,7 +281,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="f_price" class="form-label">Price</label>
-                            <input type="number" class="form-control  @error('f_price') is-invalid @enderror" id="f_price" name="f_price" placeholder="Enter a price..." value="{{ old('f_price') }}" required>
+                            <input type="text" class="form-control  @error('f_price') is-invalid @enderror" id="f_price" name="f_price" placeholder="Enter a price..." value="{{ old('f_price') }}" required>
                             @error('f_price')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -708,7 +708,7 @@
                         <input type="text" class="form-control" id="spareparts_expenses" name="spareparts_expenses" value="{{ 'IDR ' . number_format($allSparepartExpenses, 0, ',', '.') }}" readonly>
                         @endif
                     </div>
-                    <div class="mb-5">
+                    <div class="mb-3">
                         <label for="fuel_expenses" class="form-label">Fuel Expenses</label>
                         @if ($allFuelExpenses)
                         <div class="input-group">
@@ -836,6 +836,36 @@
                 showForm(selectedValue);
             });
         }
+    });
+
+    // currency
+    function formatCurrency(num) {
+        num = num.toString().replace(/[^\d-]/g, '');
+
+        num = num.replace(/-+/g, (match, offset) => offset > 0 ? "" : "-");
+
+        let isNegative = false;
+        if (num.startsWith("-")) {
+            isNegative = true;
+            num = num.slice(1);
+        }
+
+        let formattedNum = "IDR " + Math.abs(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+        if (isNegative) {
+            formattedNum = "-" + formattedNum;
+        }
+
+        return formattedNum;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        let inputPrices = document.querySelectorAll("#ux_price, #m_purchase_price, #s_amount_paid, #sp_price, #f_price");
+        inputPrices.forEach(function(inputPrice) {
+            inputPrice.addEventListener("input", function() {
+                this.value = formatCurrency(this.value);
+            });
+        });
     });
 </script>
 @endsection

@@ -152,7 +152,7 @@
                 var id = row.getAttribute("data-id");
                 var name = row.querySelector(".unexpected-name").textContent;
                 var date = row.querySelector(".unexpected-date").textContent.trim();
-                var price = row.querySelector(".unexpected-price").textContent.replace(/[^\d]/g, '');
+                var price = row.querySelector(".unexpected-price").textContent.replace(/[^\d-]/g, '');
                 var description = row.querySelector(".unexpected-description").textContent;
 
                 const dateFormat = moment(date, 'DD MMMM YYYY').format('MM/D/Y');

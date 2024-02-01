@@ -152,7 +152,7 @@
                 var id = row.getAttribute("data-id");
                 var name = row.querySelector(".sparepart-name").textContent;
                 var date = row.querySelector(".sparepart-purchase-date").textContent.trim();
-                var price = row.querySelector(".sparepart-price").textContent.replace(/[^\d]/g, '');
+                var price = row.querySelector(".sparepart-price").textContent.replace(/[^\d-]/g, '');
                 var description = row.querySelector(".sparepart-description").textContent;
 
                 const dateFormat = moment(date, 'DD MMMM YYYY').format('MM/D/Y');

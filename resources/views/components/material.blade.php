@@ -162,7 +162,7 @@
                 var name = row.querySelector(".material-name").textContent;
                 var date = row.querySelector(".material-purchase-date").textContent.trim();
                 var amount = row.querySelector(".material-amount").textContent;
-                var price = row.querySelector(".material-purchase-price").textContent.replace(/[^\d]/g, '');
+                var price = row.querySelector(".material-purchase-price").textContent.replace(/[^\d-]/g, '');
                 var description = row.querySelector(".material-description").textContent;
 
                 const dateFormat = moment(date, 'DD MMMM YYYY').format('MM/D/Y');

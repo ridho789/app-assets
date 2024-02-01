@@ -152,7 +152,7 @@
                 var id = row.getAttribute("data-id");
                 var name = row.querySelector(".salary-period").textContent;
                 var date = row.querySelector(".salary-date").textContent.trim();
-                var amount_paid = row.querySelector(".salary-amount-paid").textContent.replace(/[^\d]/g, '');
+                var amount_paid = row.querySelector(".salary-amount-paid").textContent.replace(/[^\d-]/g, '');
                 var description = row.querySelector(".salary-description").textContent;
 
                 const dateFormat = moment(date, 'DD MMMM YYYY').format('MM/D/Y');

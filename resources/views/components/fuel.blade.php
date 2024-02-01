@@ -152,7 +152,7 @@
                 var id = row.getAttribute("data-id");
                 var name = row.querySelector(".fuel-name").textContent;
                 var date = row.querySelector(".fuel-date").textContent.trim();
-                var price = row.querySelector(".fuel-price").textContent.replace(/[^\d]/g, '');
+                var price = row.querySelector(".fuel-price").textContent.replace(/[^\d-]/g, '');
                 var description = row.querySelector(".fuel-description").textContent;
 
                 const dateFormat = moment(date, 'DD MMMM YYYY').format('MM/D/Y');
