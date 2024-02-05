@@ -736,6 +736,26 @@
         </form>
     </div>
 </div>
+
+@if(session('error_type') == 'sweet-alert')
+    <div class="alert" id="errorAlert" style="display: none;">
+        <strong>Error!</strong> {{ session('error') }}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var error = "{{ session('error') }}";
+            if (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error,
+                });
+            }
+        });
+    </script>
+@endif
+
 @endif
 
 <script>
