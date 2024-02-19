@@ -18,10 +18,16 @@ class SalaryController extends Controller
     }
 
     public function update(Request $request) {
+        $numericSalary = preg_replace("/[^0-9]/", "", explode(",", $request->s_amount_paid)[0]);
+
+        if ($request->s_amount_paid[0] === '-') {
+            $numericSalary *= -1;
+        }
+
         $salaryData = [
             'period' => $request->s_period,
             'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->s_date)->toDateString(),
-            'amount_paid' => $request->s_amount_paid,
+            'amount_paid' => $numericSalary,
             'description' =>$request->s_description,
         ];
 

@@ -18,10 +18,16 @@ class UnexpectedController extends Controller
     }
 
     public function update(Request $request) {
+        $numericPrice = preg_replace("/[^0-9]/", "", explode(",", $request->ux_price)[0]);
+
+        if ($request->ux_price[0] === '-') {
+            $numericPrice *= -1;
+        }
+
         $unexpectedData = [
             'name' => $request->ux_name,
             'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->ux_date)->toDateString(),
-            'price' => $request->ux_price,
+            'price' => $numericPrice,
             'description' =>$request->ux_description,
         ];
 

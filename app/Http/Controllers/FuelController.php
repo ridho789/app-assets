@@ -18,10 +18,16 @@ class FuelController extends Controller
     }
 
     public function update(Request $request) {
+        $numericFuel = preg_replace("/[^0-9]/", "", explode(",", $request->f_price)[0]);
+
+        if ($request->f_price[0] === '-') {
+            $numericFuel *= -1;
+        }
+
         $fueltData = [
             'name' => $request->f_name,
             'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->f_date)->toDateString(),
-            'price' => $request->f_price,
+            'price' => $numericFuel,
             'description' =>$request->f_description,
         ];
 

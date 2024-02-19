@@ -47,7 +47,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="sp_price" class="form-label">Price</label>
-                            <input type="number" class="form-control  @error('sp_price') is-invalid @enderror" id="sp_price" name="sp_price" placeholder="Enter a price..." value="{{ old('sp_price') }}" required>
+                            <input type="text" class="form-control  @error('sp_price') is-invalid @enderror" id="sp_price" name="sp_price" placeholder="Enter a price..." value="{{ old('sp_price') }}" required>
                             @error('sp_price')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -107,7 +107,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td class="sparepart-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $sp->name }}</td>
                         <td class="sparepart-purchase-date">{{ date('j F Y', strtotime($sp->purchase_date)) }}</td>
-                        <td class="sparepart-price">{{ 'IDR ' . number_format($sp->price ?? 0, 0, ',', '.') }}</td>
+                        <td class="sparepart-price">{{ $sp->price }}</td>
                         <td class="sparepart-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $sp->description }}</td>
                         <td>
                             <div class="d-flex">
@@ -142,6 +142,27 @@
         sp_description.value = sp_description.value.trim();
     }
 
+    // currency
+    function formatCurrency(num) {
+        num = num.toString().replace(/[^\d-]/g, '');
+
+        num = num.replace(/-+/g, (match, offset) => offset > 0 ? "" : "-");
+
+        let isNegative = false;
+        if (num.startsWith("-")) {
+            isNegative = true;
+            num = num.slice(1);
+        }
+
+        let formattedNum = "IDR " + Math.abs(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+        if (isNegative) {
+            formattedNum = "-" + formattedNum;
+        }
+
+        return formattedNum;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         var editButtons = document.querySelectorAll(".edit-button");
         editButtons.forEach(function (button) {
@@ -152,7 +173,7 @@
                 var id = row.getAttribute("data-id");
                 var name = row.querySelector(".sparepart-name").textContent;
                 var date = row.querySelector(".sparepart-purchase-date").textContent.trim();
-                var price = row.querySelector(".sparepart-price").textContent.replace(/[^\d-]/g, '');
+                var price = row.querySelector(".sparepart-price").textContent;
                 var description = row.querySelector(".sparepart-description").textContent;
 
                 const dateFormat = moment(date, 'DD MMMM YYYY').format('MM/D/Y');
@@ -165,6 +186,19 @@
                 document.getElementById("sp_price").value = price;
                 document.getElementById("sp_description").value = description;
             });
+        });
+
+        let inputPrices = document.querySelectorAll("#sp_price");
+        inputPrices.forEach(function(inputPrice) {
+            inputPrice.addEventListener("input", function() {
+                this.value = formatCurrency(this.value);
+            });
+        });
+
+        let sparepartPrices = document.querySelectorAll(".sparepart-price");
+        sparepartPrices.forEach(function(sparepartPrice) {
+            let price = sparepartPrice.textContent;
+            sparepartPrice.textContent = formatCurrency(price);
         });
     });
 </script>

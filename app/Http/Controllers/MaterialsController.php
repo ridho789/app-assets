@@ -18,11 +18,17 @@ class MaterialsController extends Controller
     }
 
     public function update(Request $request) {
+        $numericPurchasePrice = preg_replace("/[^0-9]/", "", explode(",", $request->m_purchase_price)[0]);
+
+        if ($request->m_purchase_price[0] === '-') {
+            $numericPurchasePrice *= -1;
+        }
+
         $materialData = [
             'name' => $request->m_name,
             'purchase_date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->m_purchase_date)->toDateString(),
             'amount' => $request->m_amount,
-            'purchase_price' => $request->m_purchase_price,
+            'purchase_price' => $numericPurchasePrice,
             'description' =>$request->m_description,
         ];
 

@@ -47,7 +47,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="s_amount_paid" class="form-label">Amount Paid</label>
-                            <input type="number" class="form-control  @error('s_amount_paid') is-invalid @enderror" id="s_amount_paid" name="s_amount_paid" placeholder="Enter the amount paid..." value="{{ old('s_amount_paid') }}" required>
+                            <input type="text" class="form-control  @error('s_amount_paid') is-invalid @enderror" id="s_amount_paid" name="s_amount_paid" placeholder="Enter the amount paid..." value="{{ old('s_amount_paid') }}" required>
                             @error('s_amount_paid')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -107,7 +107,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td class="salary-period" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $s->period }}</td>
                         <td class="salary-date">{{ date('j F Y', strtotime($s->date)) }}</td>
-                        <td class="salary-amount-paid">{{ 'IDR ' . number_format($s->amount_paid ?? 0, 0, ',', '.') }}</td>
+                        <td class="salary-amount-paid">{{ $s->amount_paid }}</td>
                         <td class="salary-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $s->description }}</td>
                         <td>
                             <div class="d-flex">
@@ -142,6 +142,26 @@
         s_description.value = s_description.value.trim();
     }
 
+    function formatCurrency(num) {
+        num = num.toString().replace(/[^\d-]/g, '');
+
+        num = num.replace(/-+/g, (match, offset) => offset > 0 ? "" : "-");
+
+        let isNegative = false;
+        if (num.startsWith("-")) {
+            isNegative = true;
+            num = num.slice(1);
+        }
+
+        let formattedNum = "IDR " + Math.abs(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+        if (isNegative) {
+            formattedNum = "-" + formattedNum;
+        }
+
+        return formattedNum;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         var editButtons = document.querySelectorAll(".edit-button");
         editButtons.forEach(function (button) {
@@ -152,7 +172,7 @@
                 var id = row.getAttribute("data-id");
                 var name = row.querySelector(".salary-period").textContent;
                 var date = row.querySelector(".salary-date").textContent.trim();
-                var amount_paid = row.querySelector(".salary-amount-paid").textContent.replace(/[^\d-]/g, '');
+                var amount_paid = row.querySelector(".salary-amount-paid").textContent;
                 var description = row.querySelector(".salary-description").textContent;
 
                 const dateFormat = moment(date, 'DD MMMM YYYY').format('MM/D/Y');
@@ -165,6 +185,19 @@
                 document.getElementById("s_amount_paid").value = amount_paid;
                 document.getElementById("s_description").value = description;
             });
+        });
+
+        let inputPrices = document.querySelectorAll("#s_amount_paid");
+        inputPrices.forEach(function(inputPrice) {
+            inputPrice.addEventListener("input", function() {
+                this.value = formatCurrency(this.value);
+            });
+        });
+
+        let salaryPrices = document.querySelectorAll(".salary-amount-paid");
+        salaryPrices.forEach(function(salaryPrice) {
+            let price = salaryPrice.textContent;
+            salaryPrice.textContent = formatCurrency(price);
         });
     });
 </script>

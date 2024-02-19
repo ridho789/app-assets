@@ -47,7 +47,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="f_price" class="form-label">Price</label>
-                            <input type="number" class="form-control  @error('f_price') is-invalid @enderror" id="f_price" name="f_price" placeholder="Enter a price..." value="{{ old('f_price') }}" required>
+                            <input type="text" class="form-control  @error('f_price') is-invalid @enderror" id="f_price" name="f_price" placeholder="Enter a price..." value="{{ old('f_price') }}" required>
                             @error('f_price')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -107,7 +107,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td class="fuel-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $f->name }}</td>
                         <td class="fuel-date">{{ date('j F Y', strtotime($f->date)) }}</td>
-                        <td class="fuel-price">{{ 'IDR ' . number_format($f->price ?? 0, 0, ',', '.') }}</td>
+                        <td class="fuel-price">{{ $f->price }}</td>
                         <td class="fuel-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $f->description }}</td>
                         <td>
                             <div class="d-flex">
@@ -142,6 +142,26 @@
         f_description.value = f_description.value.trim();
     }
 
+    function formatCurrency(num) {
+        num = num.toString().replace(/[^\d-]/g, '');
+
+        num = num.replace(/-+/g, (match, offset) => offset > 0 ? "" : "-");
+
+        let isNegative = false;
+        if (num.startsWith("-")) {
+            isNegative = true;
+            num = num.slice(1);
+        }
+
+        let formattedNum = "IDR " + Math.abs(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+        if (isNegative) {
+            formattedNum = "-" + formattedNum;
+        }
+
+        return formattedNum;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         var editButtons = document.querySelectorAll(".edit-button");
         editButtons.forEach(function(button) {
@@ -152,7 +172,7 @@
                 var id = row.getAttribute("data-id");
                 var name = row.querySelector(".fuel-name").textContent;
                 var date = row.querySelector(".fuel-date").textContent.trim();
-                var price = row.querySelector(".fuel-price").textContent.replace(/[^\d-]/g, '');
+                var price = row.querySelector(".fuel-price").textContent;
                 var description = row.querySelector(".fuel-description").textContent;
 
                 const dateFormat = moment(date, 'DD MMMM YYYY').format('MM/D/Y');
@@ -165,6 +185,19 @@
                 document.getElementById("f_price").value = price;
                 document.getElementById("f_description").value = description;
             });
+        });
+
+        let inputPrices = document.querySelectorAll("#f_price");
+        inputPrices.forEach(function(inputPrice) {
+            inputPrice.addEventListener("input", function() {
+                this.value = formatCurrency(this.value);
+            });
+        });
+
+        let fuelPrices = document.querySelectorAll(".fuel-price");
+        fuelPrices.forEach(function(fuelPrice) {
+            let price = fuelPrice.textContent;
+            fuelPrice.textContent = formatCurrency(price);
         });
     });
 </script>

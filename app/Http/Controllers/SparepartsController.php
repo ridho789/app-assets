@@ -18,10 +18,16 @@ class SparepartsController extends Controller
     }
 
     public function update(Request $request) {
+        $numericSparepart = preg_replace("/[^0-9]/", "", explode(",", $request->sp_price)[0]);
+
+        if ($request->sp_price[0] === '-') {
+            $numericSparepart *= -1;
+        }
+
         $sparepartData = [
             'name' => $request->sp_name,
             'purchase_date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->sp_purchase_date)->toDateString(),
-            'price' => $request->sp_price,
+            'price' => $numericSparepart,
             'description' =>$request->sp_description,
         ];
 

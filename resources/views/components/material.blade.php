@@ -54,7 +54,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="m_purchase_price" class="form-label">Purchase Price</label>
-                            <input type="number" class="form-control  @error('m_purchase_price') is-invalid @enderror" id="m_purchase_price" name="m_purchase_price" placeholder="Enter a purchase price..." value="{{ old('m_purchase_price') }}" required>
+                            <input type="text" class="form-control  @error('m_purchase_price') is-invalid @enderror" id="m_purchase_price" name="m_purchase_price" placeholder="Enter a purchase price..." value="{{ old('m_purchase_price') }}" required>
                             @error('m_purchase_price')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -116,7 +116,7 @@
                         <td class="material-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $m->name }}</td>
                         <td class="material-purchase-date">{{ date('j F Y', strtotime($m->purchase_date)) }}</td>
                         <td class="material-amount">{{ $m->amount }}</td>
-                        <td class="material-purchase-price">{{ 'IDR ' . number_format($m->purchase_price ?? 0, 0, ',', '.') }}</td>
+                        <td class="material-purchase-price">{{ $m->purchase_price }}</td>
                         <td class="material-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{ $m->description }}</td>
                         <td>
                             <div class="d-flex">
@@ -151,6 +151,26 @@
         m_description.value = m_description.value.trim();
     }
 
+    function formatCurrency(num) {
+        num = num.toString().replace(/[^\d-]/g, '');
+
+        num = num.replace(/-+/g, (match, offset) => offset > 0 ? "" : "-");
+
+        let isNegative = false;
+        if (num.startsWith("-")) {
+            isNegative = true;
+            num = num.slice(1);
+        }
+
+        let formattedNum = "IDR " + Math.abs(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+        if (isNegative) {
+            formattedNum = "-" + formattedNum;
+        }
+
+        return formattedNum;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         var editButtons = document.querySelectorAll(".edit-button");
         editButtons.forEach(function (button) {
@@ -162,7 +182,7 @@
                 var name = row.querySelector(".material-name").textContent;
                 var date = row.querySelector(".material-purchase-date").textContent.trim();
                 var amount = row.querySelector(".material-amount").textContent;
-                var price = row.querySelector(".material-purchase-price").textContent.replace(/[^\d-]/g, '');
+                var price = row.querySelector(".material-purchase-price").textContent;
                 var description = row.querySelector(".material-description").textContent;
 
                 const dateFormat = moment(date, 'DD MMMM YYYY').format('MM/D/Y');
@@ -176,6 +196,19 @@
                 document.getElementById("m_purchase_price").value = price;
                 document.getElementById("m_description").value = description;
             });
+        });
+
+        let inputPrices = document.querySelectorAll("#m_purchase_price");
+        inputPrices.forEach(function(inputPrice) {
+            inputPrice.addEventListener("input", function() {
+                this.value = formatCurrency(this.value);
+            });
+        });
+
+        let materialPrices = document.querySelectorAll(".material-purchase-price");
+        materialPrices.forEach(function(materialPrice) {
+            let price = materialPrice.textContent;
+            materialPrice.textContent = formatCurrency(price);
         });
     });
 </script>
