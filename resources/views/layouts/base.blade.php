@@ -28,6 +28,14 @@
     <!-- Volt CSS -->
     <link type="text/css" href="{{ asset('') }}asset/css/volt.css" rel="stylesheet">
 
+    <!-- Include jQuery from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- DataTables -->
+    <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
+
 </head>
 
 <body>

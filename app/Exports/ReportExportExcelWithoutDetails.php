@@ -11,31 +11,43 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class ReportExportExcelWithoutDetails implements FromCollection, ShouldAutoSize, WithStyles
 {
     protected $asset;
-    protected $unexpected;
-    protected $materials;
-    protected $salary;
-    protected $spareparts;
-    protected $fuel;
+    protected $expenses;
 
-    public function __construct($asset, $unexpected, $materials, $salary, $spareparts, $fuel)
+    public function __construct($asset, $expenses)
     {
         $this->asset = $asset;
-        $this->unexpected = $unexpected;
-        $this->materials = $materials;
-        $this->salary = $salary;
-        $this->spareparts = $spareparts;
-        $this->fuel = $fuel;
+        $this->expenses = $expenses;
     }
 
-    public function calculateTotalExpensesPerYear(Collection $items, $dateField, $amountField)
+    public function calculateTotalExpensesPerYear(Collection $items)
     {
-        $totalPricePerYear = $items->groupBy(function ($item) use ($dateField) {
-            return \Carbon\Carbon::parse($item->$dateField)->format('Y');
-        })->map(function ($group) use ($amountField) {
-            return $group->sum($amountField);
+        // Ambil semua tahun yang ada di dalam data
+        $allYears = $items->map(function ($item) {
+            if (is_object($item) && isset($item->date)) {
+                return \Carbon\Carbon::parse($item->date)->format('Y');
+            }
+            return null;
+        })->filter()->unique();
+
+        // Hitung total pengeluaran per tahun
+        $yearlyTotals = $items->groupBy(function ($item) {
+            if (is_object($item) && isset($item->date)) {
+                return \Carbon\Carbon::parse($item->date)->format('Y');
+            }
+            return null;
+        })->filter()->map(function ($group) {
+            return $group->sum(function ($item) {
+                return is_object($item) && isset($item->price) ? $item->price : 0;
+            });
         });
 
-        return $totalPricePerYear;
+        // Buat array hasil untuk setiap tahun
+        $results = collect();
+        foreach ($allYears as $year) {
+            $results[$year] = $yearlyTotals->get($year, 0); // Jika tidak ada, set 0
+        }
+
+        return $results;
     }
 
     public function formatPriceIDR($price)
@@ -45,31 +57,7 @@ class ReportExportExcelWithoutDetails implements FromCollection, ShouldAutoSize,
 
     public function collection()
     {
-        // Calculate total expenses per year for Unexpected and Materials
-        $unexpectedExpenses = $this->calculateTotalExpensesPerYear($this->unexpected, 'date', 'price');
-        $materialsExpenses = $this->calculateTotalExpensesPerYear($this->materials, 'purchase_date', 'purchase_price');
-        $salaryExpenses = $this->calculateTotalExpensesPerYear($this->salary, 'date', 'amount_paid');
-        $sparepartsExpenses = $this->calculateTotalExpensesPerYear($this->spareparts, 'purchase_date', 'price');
-        $fuelExpenses = $this->calculateTotalExpensesPerYear($this->fuel, 'date', 'price');
-
-        // Combine years from all expenses
-        $combinedYears = collect([]);
-        $combinedYears = $combinedYears->merge($unexpectedExpenses->keys());
-        $combinedYears = $combinedYears->merge($materialsExpenses->keys());
-        $combinedYears = $combinedYears->merge($salaryExpenses->keys());
-        $combinedYears = $combinedYears->merge($sparepartsExpenses->keys());
-        $combinedYears = $combinedYears->merge($fuelExpenses->keys());
-        $combinedYears = $combinedYears->unique()->sort();
-
-        // Create the header row
-        $headerRow = collect(['']);
-        foreach ($combinedYears as $year) {
-            $headerRow->push($year);
-        }
-
-        $headerRow->push('Total');
-
-        // Prepare data for the spreadsheet
+        $years = collect([]);
         $data = collect([
             [$this->asset->name . ' (' . $this->asset->status . ')'],
             [$this->asset->location],
@@ -78,63 +66,53 @@ class ReportExportExcelWithoutDetails implements FromCollection, ShouldAutoSize,
             [''] // empty row
         ]);
 
-        // Merge header and total expenses rows
+        // Create header row
+        $headerRow = collect(['Category']);
+
+        // Process each category and calculate total expenses per year
+        foreach ($this->expenses as $category => $expenseGroup) {
+            $yearlyTotals = $this->calculateTotalExpensesPerYear($expenseGroup);
+            $years = $years->merge($yearlyTotals->keys());
+            // Add yearly totals to the header row
+            foreach ($yearlyTotals as $year => $total) {
+                if (!$headerRow->contains($year)) {
+                    $headerRow->push($year);
+                }
+            }
+        }
+        $headerRow->push('Total');
+
+        // Merge years and remove duplicates
+        $years = $years->unique()->sort();
+
+        // Add header row to data
         $data->push($headerRow);
 
-        // Calculate and merge total expenses for Unexpected
-        $unexpectedExpensesRow = collect(['Unexpected Expenses']);
-        foreach ($combinedYears as $year) {
-            $unexpectedExpensesRow->push($this->formatPriceIDR($unexpectedExpenses[$year] ?? 0));
-        }
-        
-        $unexpectedTotalAllYears = $unexpectedExpenses->sum();
-        $unexpectedExpensesRow->push($this->formatPriceIDR($unexpectedTotalAllYears));
-        $data->push($unexpectedExpensesRow);
+        // Process each category
+        foreach ($this->expenses as $categoryName => $expenseGroup) {
+            $yearlyTotals = $this->calculateTotalExpensesPerYear($expenseGroup);
+            $categoryRow = collect([$categoryName]);
+            
+            // Add yearly totals to the row
+            foreach ($years as $year) {
+                $categoryRow->push($this->formatPriceIDR($yearlyTotals[$year] ?? 0));
+            }
 
-        // Calculate and merge total expenses for Materials
-        $materialsExpensesRow = collect(['Materials Expenses']);
-        foreach ($combinedYears as $year) {
-            $materialsExpensesRow->push($this->formatPriceIDR($materialsExpenses[$year] ?? 0));
-        }
-
-        $materialsTotalAllYears = $materialsExpenses->sum();
-        $materialsExpensesRow->push($this->formatPriceIDR($materialsTotalAllYears));
-        $data->push($materialsExpensesRow);
-
-        // Calculate and merge total expenses for Salary
-        $salaryExpensesRow = collect(['Salary Expenses']);
-        foreach ($combinedYears as $year) {
-            $salaryExpensesRow->push($this->formatPriceIDR($salaryExpenses[$year] ?? 0));
+            // Add total for this category
+            $categoryRow->push($this->formatPriceIDR($yearlyTotals->sum()));
+            $data->push($categoryRow);
         }
 
-        $salaryTotalAllYears = $salaryExpenses->sum();
-        $salaryExpensesRow->push($this->formatPriceIDR($salaryTotalAllYears));
-        $data->push($salaryExpensesRow);
+        // Add additional overall total expenses
+        $totalExpenses = $this->expenses->sum(function ($expenseGroup) {
+            return $expenseGroup->sum('price');
+        });
 
-        // Calculate and merge total expenses for Spare Parts
-        $sparepartsExpensesRow = collect(['Spare Parts Expenses']);
-        foreach ($combinedYears as $year) {
-            $sparepartsExpensesRow->push($this->formatPriceIDR($sparepartsExpenses[$year] ?? 0));
-        }
-
-        $sparepartsTotalAllYears = $sparepartsExpenses->sum();
-        $sparepartsExpensesRow->push($this->formatPriceIDR($sparepartsTotalAllYears));
-        $data->push($sparepartsExpensesRow);
-
-        // Calculate and merge total expenses for Fuel
-        $fuelExpensesRow = collect(['Fuel Expenses']);
-        foreach ($combinedYears as $year) {
-            $fuelExpensesRow->push($this->formatPriceIDR($fuelExpenses[$year] ?? 0));
-        }
-
-        $fuelTotalAllYears = $fuelExpenses->sum();
-        $fuelExpensesRow->push($this->formatPriceIDR($fuelTotalAllYears));
-        $data->push($fuelExpensesRow);
-
+        // Add additional information
         $data->push(['']);
         $data->push([
             ['Title' => 'Purchase Price', 'Value' => 'IDR ' . number_format($this->asset->purchase_price ?? 0, 0, ',', '.')],
-            ['Title' => 'Total Expenses', 'Value' => 'IDR ' . number_format($this->asset->tot_expenses ?? 0, 0, ',', '.')],
+            ['Title' => 'Total Expenses', 'Value' => $this->formatPriceIDR($totalExpenses)],
             ['Title' => 'Overall Expenses', 'Value' => 'IDR ' . number_format($this->asset->tot_overall_expenses ?? 0, 0, ',', '.')]
         ]);
 
@@ -142,10 +120,16 @@ class ReportExportExcelWithoutDetails implements FromCollection, ShouldAutoSize,
     }
 
     public function styles(Worksheet $sheet)
-    {   
+    {
         return [
             1 => [
                 'font' => ['bold' => true, 'size' => 12],
+            ],
+            2 => [
+                'font' => ['bold' => true],
+            ],
+            3 => [
+                'font' => ['bold' => true],
             ],
         ];
     }

@@ -9,6 +9,8 @@ use App\Models\Material;
 use App\Models\Salary;
 use App\Models\Sparepart;
 use App\Models\Unexpected;
+use App\Models\Category;
+use App\Models\Expense;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Redis;
 use PDF;
@@ -21,18 +23,19 @@ class AssetsController extends Controller
     }
 
     public function store(Request $request) {
-        $request->validate([
-            'purchase_price' => 'numeric',
-        ]);
+        $numericPrice = preg_replace("/[^0-9]/", "", explode(",", $request->purchase_price)[0]);
+        if ($request->purchase_price[0] === '-') {
+            $numericPrice *= -1;
+        }
 
         Asset::insert([
             'name' => $request->name,
             'location' =>$request->location,
-            'purchase_price' =>$request->purchase_price,
+            'purchase_price' =>$numericPrice,
             'purchase_date' =>\Carbon\Carbon::createFromFormat('m/d/Y', $request->purchase_date)->toDateString(),
             'description' =>$request->description,
             'status' => $request->status,
-            'tot_overall_expenses' =>$request->purchase_price,
+            'tot_overall_expenses' =>$numericPrice,
         ]);
 
         // dashboard
@@ -43,29 +46,32 @@ class AssetsController extends Controller
         $id = Crypt::decrypt($id);
 
         $asset = Asset::where('id_asset', $id)->first();
-        $allFuelExpenses = Fuel::where('id_asset', $id)->sum('price');
-        $allMaterialExpenses = Material::where('id_asset', $id)->sum('purchase_price');
-        $allSalaryExpenses = Salary::where('id_asset', $id)->sum('amount_paid');
-        $allSparepartExpenses = Sparepart::where('id_asset', $id)->sum('price');
-        $allUnexpectedExpenses = Unexpected::where('id_asset', $id)->sum('price');
+        $category = Category::orderBy('name')->get();
+        $totalExpenses = 0;
 
-        $fuel = Fuel::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
-        $material = Material::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('purchase_date', 'asc')->get();
-        $salary = Salary::where('id_asset', $id)->orderBy('period', 'asc')->orderBy('date', 'asc')->get();
-        $sparepart = Sparepart::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('purchase_date', 'asc')->get();
-        $unexpected = Unexpected::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
+        // Ambil semua expense terkait asset dan join dengan category
+        $expenses = Expense::with('category')
+            ->where('id_asset', $id)
+            ->get()
+            ->groupBy('category.name');
 
-        $totalExpenses = $allFuelExpenses + $allMaterialExpenses + $allSalaryExpenses + $allSparepartExpenses + $allUnexpectedExpenses;
+        // Hitung total setiap jenis pengeluaran
+        foreach ($expenses as $categoryName => $expenseGroup) {
+            $expenseSum = $expenseGroup->sum('price');
+            $totalExpenses += $expenseSum;
+            $expenses[$categoryName]['total'] = $expenseSum;
+        }
+        
+        $purchasePrice = $asset->purchase_price ?? 0;
 
         // Update total overall expenses
         Asset::where('id_asset', $id)->update([
             'tot_expenses' => $totalExpenses,
-            'tot_overall_expenses' => $asset->purchase_price + $totalExpenses,
+            'tot_overall_expenses' => $purchasePrice + $totalExpenses,
         ]);
 
         return view('/components/asset', compact(
-            'asset', 'allFuelExpenses', 'allMaterialExpenses', 'allSalaryExpenses', 'allSparepartExpenses', 'allUnexpectedExpenses', 'totalExpenses',
-            'fuel', 'material', 'salary', 'sparepart', 'unexpected'
+            'asset', 'category', 'expenses', 'totalExpenses'
         ));
     }
 
@@ -92,64 +98,61 @@ class AssetsController extends Controller
         return redirect('/dashboard');
     }
 
-    public function report_with_details($id) {
+    public function reportPDF($id_asset) {
+        // Dekripsi ID aset
+        $id = Crypt::decrypt($id_asset);
         $asset = Asset::where('id_asset', $id)->first();
-        $fuel = Fuel::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
-        $material = Material::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('purchase_date', 'asc')->get();
-        $salary = Salary::where('id_asset', $id)->orderBy('period', 'asc')->orderBy('date', 'asc')->get();
-        $sparepart = Sparepart::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('purchase_date', 'asc')->get();
-        $unexpected = Unexpected::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
 
-        $pdf = PDF::loadView('reports.pdf_report_asset_with_details', compact(
-            'asset', 'fuel', 'material', 'salary', 'sparepart', 'unexpected'
-        ))->setPaper('a4', 'landscape');
+        // Periksa jenis laporan
+        $type = request()->query('type');
 
-        return $pdf->download('Report Asset (With Details) - ' . $asset->name . '.pdf');
+        if ($type === 'with-details') {
+            // Mengambil data untuk laporan dengan detail
+            $totalExpenses = 0;
+            $expenses = Expense::with('category')
+                ->where('id_asset', $id)
+                ->get()
+                ->groupBy('category.name');
+
+            foreach ($expenses as $categoryName => $expenseGroup) {
+                $expenseSum = $expenseGroup->sum('price');
+                $totalExpenses += $expenseSum;
+                $expenses[$categoryName]['total'] = $expenseSum;
+            }
+
+            // Membuat PDF untuk laporan dengan detail
+            $pdf = PDF::loadView('reports.pdf_report_asset_with_details', compact('asset', 'expenses'))
+                ->setPaper('a4', 'landscape');
+
+            return $pdf->stream('Report Asset (With Details) - ' . $asset->name . '.pdf');
+
+        } elseif ($type === 'without-details') {
+            // Mengambil semua data pengeluaran berdasarkan id_asset
+            $expenses = Expense::with('category')
+            ->where('id_asset', $id)
+            ->get()
+            ->groupBy('category.name');
+
+            // Inisialisasi array untuk total harga per tahun
+            $totalPricesPerYear = [];
+
+            foreach ($expenses as $categoryName => $items) {
+            $totalPricesPerYear[$categoryName] = $items->groupBy(function($item) {
+                return \Carbon\Carbon::parse($item->date)->format('Y');
+            })->map(function ($itemGroup) {
+                return $itemGroup->sum('price');
+            });
+            }
+
+            // Membuat PDF untuk laporan dengan detail
+            $pdf = PDF::loadView('reports.pdf_report_asset_without_details', compact('asset', 'expenses'))
+                ->setPaper('a4', 'landscape');
+
+            return $pdf->stream('Report Asset (Without Details) - ' . $asset->name . '.pdf');
+        }
+
+        // Jika jenis tidak dikenali, bisa mengembalikan response error atau redirect
+        return redirect()->back()->withErrors(['error' => 'Invalid report type specified.']);
     }
 
-    public function report_without_details($id) {
-        $asset = Asset::where('id_asset', $id)->first();
-        $fuel = Fuel::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
-        $material = Material::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('purchase_date', 'asc')->get();
-        $salary = Salary::where('id_asset', $id)->orderBy('period', 'asc')->orderBy('date', 'asc')->get();
-        $sparepart = Sparepart::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('purchase_date', 'asc')->get();
-        $unexpected = Unexpected::where('id_asset', $id)->orderBy('name', 'asc')->orderBy('date', 'asc')->get();
-
-        $totalFuelPricePerYear = $fuel->groupBy(function($date) {
-            return \Carbon\Carbon::parse($date->date)->format('Y');
-        })->map(function ($item) {
-            return $item->sum('price');
-        });
-
-        $totalMaterialPricePerYear = $material->groupBy(function($date) {
-            return \Carbon\Carbon::parse($date->purchase_date)->format('Y');
-        })->map(function ($item) {
-            return $item->sum('purchase_price');
-        });
-
-        $totalSalaryPricePerYear = $salary->groupBy(function($date) {
-            return \Carbon\Carbon::parse($date->date)->format('Y');
-        })->map(function ($item) {
-            return $item->sum('amount_paid');
-        });
-
-        $totalSparepartPricePerYear = $sparepart->groupBy(function($date) {
-            return \Carbon\Carbon::parse($date->purchase_date)->format('Y');
-        })->map(function ($item) {
-            return $item->sum('price');
-        });
-
-        $totalUnexpectedPricePerYear = $unexpected->groupBy(function($date) {
-            return \Carbon\Carbon::parse($date->date)->format('Y');
-        })->map(function ($item) {
-            return $item->sum('price');
-        });
-
-        $pdf = PDF::loadView('reports.pdf_report_asset_without_details', compact(
-            'asset', 'fuel', 'material', 'salary', 'sparepart', 'unexpected', 'totalFuelPricePerYear', 
-            'totalMaterialPricePerYear', 'totalSalaryPricePerYear', 'totalSparepartPricePerYear', 'totalUnexpectedPricePerYear'
-        ))->setPaper('a4', 'landscape');
-
-        return $pdf->download('Report Asset (Without Details) - ' . $asset->name . '.pdf');
-    }
 }

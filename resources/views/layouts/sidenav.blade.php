@@ -32,7 +32,7 @@
                     <span class="mt-1 ms-1 sidebar-text">Assets Overview</span>
                 </a>
             </li>
-            <li class="nav-item  active ">
+            <li class="nav-item" id="dashboard-menu">
                 <a href="{{ url('/dashboard') }}" class="nav-link">
                     <span class="sidebar-icon">
                         <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -43,7 +43,7 @@
                     <span class="sidebar-text">Dashboard</span>
                 </a>
             </li>
-            <!-- <li class="nav-item">
+            <li class="nav-item" id="master-data-menu">
                 <span class="nav-link  collapsed  d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#submenu-components">
                     <span>
                         <span class="sidebar-icon">
@@ -52,7 +52,7 @@
                                 <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                             </svg>
                         </span>
-                        <span class="sidebar-text">Components</span>
+                        <span class="sidebar-text">Master Data</span>
                     </span>
                     <span class="link-arrow">
                         <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -63,38 +63,13 @@
                 <div class="multi-level collapse " role="list" id="submenu-components" aria-expanded="false">
                     <ul class="flex-column nav">
                         <li class="nav-item">
-                            <a class="nav-link" target="_blank" href="https://themesberg.com/docs/volt-bootstrap-5-dashboard/components/accordions/">
-                                <span class="sidebar-text">All Components</span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="{{ asset('') }}asset/pages/components/buttons.html">
-                                <span class="sidebar-text">Buttons</span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="{{ asset('') }}asset/pages/components/notifications.html">
-                                <span class="sidebar-text">Notifications</span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="{{ asset('') }}asset/pages/components/forms.html">
-                                <span class="sidebar-text">Forms</span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="{{ asset('') }}asset/pages/components/modals.html">
-                                <span class="sidebar-text">Modals</span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="{{ asset('') }}asset/pages/components/typography.html">
-                                <span class="sidebar-text">Typography</span>
+                            <a class="nav-link" href="{{ url('/category') }}">
+                                <span class="sidebar-text">Category</span>
                             </a>
                         </li>
                     </ul>
                 </div>
-            </li> -->
+            </li>
             <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
             <li class="nav-item">
                 <a href="https://themesberg.com" target="_blank" class="nav-link d-flex align-items-center">
@@ -107,3 +82,24 @@
         </ul>
     </div>
 </nav>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        navLinks.forEach(link => {
+            const linkHref = link.getAttribute('href');
+            if (currentPath === linkHref) {
+                link.closest('.nav-item').classList.add('active');
+                const parentCollapse = link.closest('.collapse');
+                if (parentCollapse) {
+                    parentCollapse.classList.add('show');
+                    const parentNav = parentCollapse.previousElementSibling;
+                    if (parentNav) {
+                        parentNav.classList.remove('collapsed');
+                    }
+                }
+            }
+        });
+    });
+</script>

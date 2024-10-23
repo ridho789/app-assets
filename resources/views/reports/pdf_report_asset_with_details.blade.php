@@ -73,218 +73,54 @@
                 </tr>
             </table>
             
-            <h5>Unexpected Expenses</h5>
-            <table class="table table-responsive-sm">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Price</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                @if(count($unexpected) > 0)
-                    <tbody>
-                        @php
-                            $totalUnexpected = 0;
-                        @endphp
-                        @foreach($unexpected as $u)
+            @foreach ($expenses as $categoryName => $expenseGroup)
+                <h5>{{ ucwords(strtolower($categoryName)) }}</h5>
+                <table class="table table-responsive-sm">
+                    <thead>
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{$u->name}}</td>
-                            <td>{{ date('j F Y', strtotime($u->date)) }}</td>
-                            <td>{{ 'IDR ' . number_format($u->price ?? 0, 0, ',', '.') }}</td>
-                            <td>{{$u->description}}</td>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Price</th>
+                            <th>Description</th>
                         </tr>
-                        @php
-                            $totalUnexpected += $u->price;
-                        @endphp
-                        @endforeach 
-                    </tbody>
-                @else
-                    <tbody>
-                        <tr>
-                            <td colspan="6" class="center-text">No data available</td>
-                        </tr>
-                    </tbody>
-                @endif
-            </table>
-
-            <div class="total-sub-expense">
-                <span>Total Unexpected Expenses: <b>{{ 'IDR ' . number_format($totalUnexpected ?? 0, 0, ',', '.') }}</b></span>
-            </div>
-
-            <h5>Materials Expenses</h5>
-            <table class="table table-responsive-sm">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Purchase Date</th>
-                        <th>Amount</th>
-                        <th>Purchase Price</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                @if(count($material) > 0)
-                    <tbody>
-                        @php
-                            $totalMaterial = 0;
-                        @endphp
-                        @foreach($material as $m)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{$m->name}}</td>
-                            <td>{{ date('j F Y', strtotime($m->purchase_date)) }}</td>
-                            <td>{{$m->amount}}</td>
-                            <td>{{ 'IDR ' . number_format($m->purchase_price ?? 0, 0, ',', '.') }}</td>
-                            <td>{{$m->description}}</td>
-                        </tr>
-                        @php
-                            $totalMaterial += $m->purchase_price;
-                        @endphp
-                        @endforeach 
-                    </tbody>
-                @else
-                    <tbody>
-                        <tr>
-                            <td colspan="6" class="center-text">No data available</td>
-                        </tr>
-                    </tbody>
-                @endif
-            </table>
-
-            <div class="total-sub-expense">
-                <span>Total Materials Expenses: <b>{{ 'IDR ' . number_format($totalMaterial ?? 0, 0, ',', '.') }}</b></span>
-            </div>
-
-            <h5>Salary Expenses</h5>
-            <table class="table table-responsive-sm">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Period</th>
-                        <th>Date</th>
-                        <th>Amount Paid</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                @if(count($salary) > 0)
-                    <tbody>
-                        @php
-                            $totalSalary = 0;
-                        @endphp
-                        @foreach($salary as $s)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{$s->period}}</td>
-                            <td>{{ date('j F Y', strtotime($s->date)) }}</td>
-                            <td>{{ 'IDR ' . number_format($s->amount_paid ?? 0, 0, ',', '.') }}</td>
-                            <td>{{$s->description}}</td>
-                        </tr>
-                        @php
-                            $totalSalary += $s->amount_paid;
-                        @endphp
-                        @endforeach 
-                    </tbody>
-                @else
-                    <tbody>
-                        <tr>
-                            <td colspan="6" class="center-text">No data available</td>
-                        </tr>
-                    </tbody>
-                @endif
-            </table>
-
-            <div class="total-sub-expense">
-                <span>Total Salary Expenses: <b>{{ 'IDR ' . number_format($totalSalary ?? 0, 0, ',', '.') }}</b></span>
-            </div>
-
-            <h5>Spareparts Expenses</h5>
-            <table class="table table-responsive-sm">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Purchase Date</th>
-                        <th>Price</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                @if(count($sparepart) > 0)
-                    <tbody>
-                        @php
-                            $totalSparepart = 0;
-                        @endphp
-                        @foreach($sparepart as $sp)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{$sp->name}}</td>
-                            <td>{{ date('j F Y', strtotime($sp->purchase_date)) }}</td>
-                            <td>{{ 'IDR ' . number_format($sp->price ?? 0, 0, ',', '.') }}</td>
-                            <td>{{$sp->description}}</td>
-                        </tr>
-                        @php
-                            $totalSparepart += $sp->price;
-                        @endphp
-                        @endforeach 
-                    </tbody>
-                @else
-                    <tbody>
-                        <tr>
-                            <td colspan="6" class="center-text">No data available</td>
-                        </tr>
-                    </tbody>
-                @endif
-            </table>
-
-            <div class="total-sub-expense">
-                <span>Total Spareparts Expenses: <b>{{ 'IDR ' . number_format($totalSparepart ?? 0, 0, ',', '.') }}</b></span>
-            </div>
-
-            <h5>Fuel Expenses</h5>
-            <table class="table table-responsive-sm">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Price</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                @if(count($fuel) > 0)
-                    <tbody>
-                        @php
-                            $totalFuel = 0;
-                        @endphp
-                        @foreach($fuel as $f)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{$f->name}}</td>
-                            <td>{{ date('j F Y', strtotime($f->date)) }}</td>
-                            <td>{{ 'IDR ' . number_format($f->price ?? 0, 0, ',', '.') }}</td>
-                            <td>{{$f->description}}</td>
-                        </tr>
-                        @php
-                            $totalFuel += $f->price;
-                        @endphp
-                        @endforeach 
-                    </tbody>
-                @else
-                    <tbody>
-                        <tr>
-                            <td colspan="6" class="center-text">No data available</td>
-                        </tr>
-                    </tbody>
-                @endif
-            </table>
-
-            <div class="total-sub-expense">
-                <span>Total Fuel Expenses: <b>{{ 'IDR ' . number_format($totalFuel ?? 0, 0, ',', '.') }}</b></span>
-            </div>
+                    </thead>
+                    @if(count($expenseGroup) > 0)
+                        <tbody>
+                            @php
+                                $totalCategory = 0;
+                            @endphp
+                            @foreach($expenseGroup as $index => $expense)
+                                @if(is_object($expense))
+                                <tr>
+                                    <td>{{ $index + 1 }}.</td>
+                                    <td>{{ $expense->name }}</td>
+                                    <td>{{ date('j F Y', strtotime($expense->date ?? '')) }}</td>
+                                    <td>{{ 'IDR ' . number_format($expense->price ?? 0, 0, ',', '.') }}</td>
+                                    <td>{{ $expense->desc ?? '-' }}</td>
+                                </tr>
+                                @php
+                                    $totalCategory += $expense->price ?? 0;
+                                @endphp
+                                @endif
+                            @endforeach
+                        </tbody>
+                    @else
+                        <tbody>
+                            <tr>
+                                <td colspan="5" class="center-text">No data available</td>
+                            </tr>
+                        </tbody>
+                    @endif
+                </table>
+    
+                <div class="total-sub-expense">
+                    <span>Total {{ ucwords(strtolower($categoryName)) }}: <b>{{ 'IDR ' . number_format($expenseGroup['total'] ?? $totalCategory, 0, ',', '.') }}</b></span>
+                </div>
+            @endforeach
+            
         </div>
+
 
         <div style="display: flex; flex-direction: column; align-items: flex-start; float:right;">
             <div style="display: flex; align-items: baseline; margin-bottom: 10px; font-size: small; ">

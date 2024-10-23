@@ -31,11 +31,6 @@
             font-size: 12.5px;
         }
 
-        .total-sub-expense {
-            float: left;
-            margin-bottom: 15px;
-        }
-
         p {
             font-size: smaller;
         }
@@ -63,51 +58,39 @@
     </div>
 
     @php
-    $totalUnexpected = 0;
-    $totalMaterial = 0;
-    $totalSalary = 0;
-    $totalSparepart = 0;
-    $totalFuel = 0;
+    $totalExpenses = [];
+    @endphp
+    
+    @php
+    $totalExpenses = []; // Inisialisasi array totalExpenses
+
+    // Menghitung total untuk setiap kategori pengeluaran
+    foreach ($expenses as $categoryName => $items) {
+        foreach ($items as $item) {
+            if (!isset($totalExpenses[$categoryName])) {
+                $totalExpenses[$categoryName] = 0;
+            }
+            $totalExpenses[$categoryName] += $item->price; // Tambahkan harga item ke total
+        }
+    }
     @endphp
 
-    @foreach($unexpected as $u)
     @php
-    $totalUnexpected += $u->price;
-    @endphp
-    @endforeach
+    $years = [];
+    $totalPricesPerYear = [];
 
-    @foreach($material as $m)
-    @php
-    $totalMaterial += $m->purchase_price;
-    @endphp
-    @endforeach
+    foreach ($expenses as $categoryName => $items) {
+        $totalPricesPerYear[$categoryName] = $items->groupBy(function($item) {
+            return \Carbon\Carbon::parse($item->date)->format('Y');
+        })->map(function ($itemGroup) {
+            return $itemGroup->sum('price'); // Ganti 'amount' dengan field yang sesuai
+        });
+        // Mengumpulkan tahun yang digunakan
+        $years = array_merge($years, array_keys($totalPricesPerYear[$categoryName]->toArray()));
+    }
 
-    @foreach($salary as $s)
-    @php
-    $totalSalary += $s->amount_paid;
-    @endphp
-    @endforeach
-
-    @foreach($sparepart as $sp)
-    @php
-    $totalSparepart += $sp->price;
-    @endphp
-    @endforeach
-
-    @foreach($fuel as $f)
-    @php
-    $totalFuel += $f->price;
-    @endphp
-    @endforeach
-
-    @php
-    $materialYears = $totalMaterialPricePerYear->keys()->toArray();
-    $fuelYears = $totalFuelPricePerYear->keys()->toArray();
-    $salaryYears = $totalSalaryPricePerYear->keys()->toArray();
-    $sparepartYears = $totalSparepartPricePerYear->keys()->toArray();
-    $unexpectedYears = $totalUnexpectedPricePerYear->keys()->toArray();
-    $years = array_unique(array_merge($materialYears, $fuelYears, $salaryYears, $sparepartYears, $unexpectedYears));
-    sort($years); // Mengurutkan tahun dari terkecil
+    $years = array_unique($years);
+    sort($years);
     @endphp
 
     <div style="margin-bottom: 60px; margin-top:150px;">
@@ -119,61 +102,28 @@
                 @endforeach
                 <td><b>Total</b></td>
             </tr>
+
+            @foreach ($totalPricesPerYear as $categoryName => $totals)
             <tr>
-                <td><b>Unexpected Expenses</b></td>
+                <td><b>{{ ucwords(strtolower($categoryName)) }}</b></td>
                 @foreach ($years as $year)
                 <td>
-                    {{ 'IDR ' . number_format($totalUnexpectedPricePerYear[$year] ?? 0, 0, ',', '.') }} <br>
+                    {{ 'IDR ' . number_format($totals[$year] ?? 0, 0, ',', '.') }} <br>
                 </td>
                 @endforeach
-                <td><b>{{ 'IDR ' . number_format($totalUnexpected ?? 0, 0, ',', '.') }}</b></td>
+                <td><b>{{ 'IDR ' . number_format($totalExpenses[$categoryName] ?? 0, 0, ',', '.') }}</b></td>
             </tr>
-            <tr>
-                <td><b>Material Expenses</b></td>
-                @foreach ($years as $year)
-                <td>
-                    {{ 'IDR ' . number_format($totalMaterialPricePerYear[$year] ?? 0, 0, ',', '.') }} <br>
-                </td>
-                @endforeach
-                <td><b>{{ 'IDR ' . number_format($totalMaterial ?? 0, 0, ',', '.') }}</b></td>
-            </tr>
-            <tr>
-                <td><b>Salary Expenses</b></td>
-                @foreach ($years as $year)
-                <td>
-                    {{ 'IDR ' . number_format($totalSalaryPricePerYear[$year] ?? 0, 0, ',', '.') }} <br>
-                </td>
-                @endforeach
-                <td><b>{{ 'IDR ' . number_format($totalSalary ?? 0, 0, ',', '.') }}</b></td>
-            </tr>
-            <tr>
-                <td><b>Sparepart Expenses</b></td>
-                @foreach ($years as $year)
-                <td>
-                    {{ 'IDR ' . number_format($totalSparepartPricePerYear[$year] ?? 0, 0, ',', '.') }} <br>
-                </td>
-                @endforeach
-                <td><b>{{ 'IDR ' . number_format($totalSparepart ?? 0, 0, ',', '.') }}</b></td>
-            </tr>
-            <tr>
-                <td><b>Fuel Expenses</b></td>
-                @foreach ($years as $year)
-                <td>
-                    {{ 'IDR ' . number_format($totalFuelPricePerYear[$year] ?? 0, 0, ',', '.') }}
-                </td>
-                @endforeach
-                <td><b>{{ 'IDR ' . number_format($totalFuel ?? 0, 0, ',', '.') }}</b></td>
-            </tr>
+            @endforeach
         </table>
     </div>
 
     <div style="display: flex; flex-direction: column; align-items: flex-start; float:right;">
-        <div style="display: flex; align-items: baseline; margin-bottom: 10px; font-size: small; ">
+        <div style="display: flex; align-items: baseline; margin-bottom: 10px; font-size: small;">
             <span style="width: 150px; display: inline-block;">Purchase Price</span>
             <span style="display: inline-block;">: {{ 'IDR ' . number_format($asset->purchase_price ?? 0, 0, ',', '.') }}</span>
         </div>
 
-        <div style="display: flex; align-items: baseline; margin-bottom: 20px; font-size: small; ">
+        <div style="display: flex; align-items: baseline; margin-bottom: 20px; font-size: small;">
             <span style="width: 150px; display: inline-block;">Total Expense</span>
             <span style="display: inline-block;">: {{ 'IDR ' . number_format($asset->tot_expenses ?? 0, 0, ',', '.') }}</span>
         </div>

@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use App\Models\Expense;
 
 class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithStyles
 {
@@ -15,20 +16,12 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, With
      */
 
     private $asset;
-    private $unexpected;
-    private $materials;
-    private $salary;
-    private $spareparts;
-    private $fuel;
+    private $expenses;
 
-    public function __construct($asset, $unexpected, $materials, $salary, $spareparts, $fuel)
+    public function __construct($asset, $expenses)
     {
         $this->asset = $asset;
-        $this->unexpected = $unexpected;
-        $this->materials = $materials;
-        $this->salary = $salary;
-        $this->spareparts = $spareparts;
-        $this->fuel = $fuel;
+        $this->$expenses = $expenses;
     }
 
     public function headings(): array
@@ -57,108 +50,59 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, With
                 'Overall Expenses' => 'IDR ' . number_format($this->asset->tot_overall_expenses ?? 0, 0, ',', '.'),
             ],
             [''],
-            ['Unexpected Expenses'],
-            ['Name', 'Price', 'Date', 'Description']
         ];
 
-        if (count($this->unexpected) > 0) {
-            foreach ($this->unexpected as $unexpected) {
+        $totalExpenses = 0;
+
+        // Mendapatkan semua pengeluaran berdasarkan kategori
+        $expenses = Expense::with('category')
+            ->where('id_asset',  $this->asset->id_asset)
+            ->get()
+            ->groupBy('category.name');
+
+        // Mengiterasi setiap kategori pengeluaran
+        foreach ($expenses as $categoryName => $expenseGroup) {
+            $expenseSum = $expenseGroup->sum('price');
+            $totalExpenses += $expenseSum;
+
+            // Menambahkan judul kategori dan header tabel
+            $data[] = [$categoryName];
+            if ($categoryName === 'Materials') {
+                $data[] = ['Name', 'Price', 'Date', 'Description'];
+            } elseif ($categoryName === 'Salary') {
+                $data[] = ['Name', 'Price', 'Date', 'Description'];
+            } elseif ($categoryName === 'Spareparts') {
+                $data[] = ['Name', 'Price', 'Date', 'Description'];
+            } elseif ($categoryName === 'Fuel') {
+                $data[] = ['Name', 'Price', 'Date', 'Description'];
+            }
+
+            // Menambahkan data pengeluaran untuk kategori ini
+            foreach ($expenseGroup as $expense) {
                 $data[] = [
-                    'Name' => $unexpected->name,
-                    'Price' => 'IDR ' . number_format($unexpected->price ?? 0, 0, ',', '.'),
-                    'Date' => date('l, j F Y', strtotime($unexpected->date)),
-                    'Description' => $unexpected->description
+                    'Name' => $expense->name ?? null,
+                    'Price' => 'IDR ' . number_format($expense->price ?? 0, 0, ',', '.'),
+                    'Date' => isset($expense->date) ? date('l, j F Y', strtotime($expense->date)) : null,
+                    'Description' => $expense->desc ?? null,
+                    // Hanya tambahkan kolom 'Amount' jika kategori adalah 'Materials'
                 ];
             }
 
-        } else {
+            // Tambahkan total pengeluaran untuk kategori ini
+            $data[] = ['Total for ' . $categoryName => 'IDR ' . number_format($expenseSum, 0, ',', '.')];
+
+            // Tambahkan pemisah
+            $data[] = [''];
+        }
+
+        // Tambahkan total keseluruhan
+        $data[] = ['Total Expenses' => 'IDR ' . number_format($totalExpenses, 0, ',', '.')];
+
+        // Jika tidak ada pengeluaran yang ditemukan
+        if (empty($data)) {
             $data[] = ['No data available'];
         }
 
-        $data[] = [''];
-
-        $data[] = [
-            ['Materials Expenses'],
-            ['Name', 'Purchase Price', 'Purchase Date', 'Description', 'Amount']
-        ];
-
-        if (count($this->materials) > 0) {
-            foreach ($this->materials as $material) {
-                $data[] = [
-                    'Name' => $material->name,
-                    'Purchase Price' => 'IDR ' . number_format($material->purchase_price ?? 0, 0, ',', '.'),
-                    'Purchase Date' => date('l, j F Y', strtotime($material->purchase_date)),
-                    'Description' => $material->description,
-                    'Amount' => $material->amount,
-                ];
-            }
-
-        } else {
-            $data[] = ['No data available'];
-        }
-
-        $data[] = [''];
-
-        $data[] = [
-            ['Salary Expenses'],
-            ['Period', 'Amount Paid', 'Date', 'Description']
-        ];
-
-        if (count($this->salary) > 0) {
-            foreach ($this->salary as $salary) {
-                $data[] = [
-                    'Period' => $salary->period,
-                    'Amount Paid' => 'IDR ' . number_format($salary->amount_paid ?? 0, 0, ',', '.'),
-                    'Date' => date('l, j F Y', strtotime($salary->date)),
-                    'Description' => $salary->description,
-                ];
-            }
-
-        } else {
-            $data[] = ['No data available'];
-        }
-
-        $data[] = [''];
-
-        $data[] = [
-            ['Spareparts Expenses'],
-            ['Name', 'Price', 'Purchase Date', 'Description']
-        ];
-
-        if (count($this->spareparts) > 0) {
-            foreach ($this->spareparts as $sparepart) {
-                $data[] = [
-                    'Name' => $sparepart->name,
-                    'Price' => 'IDR ' . number_format($sparepart->price ?? 0, 0, ',', '.'),
-                    'Purchase Date' => date('l, j F Y', strtotime($sparepart->purchase_date)),
-                    'Description' => $sparepart->description,
-                ];
-            }
-
-        } else {
-            $data[] = ['No data available'];
-        }
-
-        $data[] = [''];
-
-        $data[] = [
-            ['Fuel Expenses'],
-            ['Name', 'Price', 'Date', 'Description']
-        ];
-        
-        if (count($this->fuel) > 0) {
-            foreach ($this->fuel as $fuel) {
-                $data[] = [
-                    'Name' => $fuel->name,
-                    'Price' => 'IDR ' . number_format($fuel->price ?? 0, 0, ',', '.'),
-                    'Date' => date('l, j F Y', strtotime($fuel->date)),
-                    'Description' => $fuel->description,
-                ];
-            }
-
-        } else {
-            $data[] = ['No data available'];
-        }
 
         return collect($data);
     }
