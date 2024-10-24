@@ -216,6 +216,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const tableData = $('#table-expense').DataTable({
+            pageLength: 25,
             columnDefs: [
                 { 
                     targets: [0, 5], 

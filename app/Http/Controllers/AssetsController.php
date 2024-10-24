@@ -76,20 +76,20 @@ class AssetsController extends Controller
     }
 
     public function update(Request $request) {
-        $request->validate([
-            'purchase_price' => 'numeric',
-        ]);
-
         $formatTotExpenses = (int) str_replace(',', '', number_format((int) str_replace(['IDR ', '.'], '', $request->total_expenses), 0, ',', ''));
+        $numericPrice = preg_replace("/[^0-9]/", "", explode(",", $request->purchase_price)[0]);
+        if ($request->purchase_price[0] === '-') {
+            $numericPrice *= -1;
+        }
 
         $assetData = [
             'name' => $request->name,
-            'location' =>$request->location,
-            'purchase_price' =>$request->purchase_price,
-            'purchase_date' =>\Carbon\Carbon::createFromFormat('m/d/Y', $request->purchase_date)->toDateString(),
-            'description' =>$request->description,
+            'location' => $request->location,
+            'purchase_price' => $numericPrice,
+            'purchase_date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->purchase_date)->toDateString(),
+            'description' => $request->description,
             'status' => $request->status,
-            'tot_overall_expenses' => $request->purchase_price + $formatTotExpenses,
+            'tot_overall_expenses' => $numericPrice + $formatTotExpenses,
         ];
 
         Asset::where('id_asset', $request->id)->update($assetData);

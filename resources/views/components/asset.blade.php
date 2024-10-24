@@ -210,17 +210,19 @@
                     <input type="hidden" name="id" value="{{ $asset->id_asset }}">
                     <div class="mb-3">
                         <label for="name" class="form-label">Asset Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter the asset name..." value="{{ old('name', $asset->name) }}" required>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter the asset name..." 
+                        oninput="this.value = this.value.toUpperCase()" value="{{ old('name', $asset->name) }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="location" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter a location..." value="{{ old('location', $asset->location) }}" required>
+                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter a location..." 
+                        oninput="this.value = this.value.toUpperCase()" value="{{ old('location', $asset->location) }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="purchase_price" class="form-label">Purchase Price</label>
                         <div class="input-group">
                             <input type="text" class="form-control  @error('purchase_price') is-invalid @enderror" id="purchase_price" 
-                            name="purchase_price" placeholder="Enter a purchase price..." value="{{ 'IDR ' . number_format($asset->purchase_price, 0, ',', '.') }}" required>
+                            name="purchase_price" placeholder="Enter a purchase price..." value="{{ 'IDR ' . number_format($asset->purchase_price, 0, ',', '.') }}">
                         </div>
                         @error('purchase_price')
                         <div class="invalid-feedback">{{ $message }}</div>
