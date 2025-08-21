@@ -23,6 +23,7 @@ class CreateAssetsTable extends Migration
             $table->string('status');
             $table->string('tot_expenses')->default('0');
             $table->string('tot_overall_expenses')->default('0');
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }

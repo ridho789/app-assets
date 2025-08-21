@@ -14,6 +14,8 @@ use App\Models\Expense;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Redis;
 use PDF;
+use DateTime;
+use Illuminate\Support\Facades\Storage;
 
 class AssetsController extends Controller
 {
@@ -96,6 +98,42 @@ class AssetsController extends Controller
 
         // dashboard
         return redirect('/dashboard');
+    }
+
+    public function upload(Request $request) {
+        $request->validate([
+            'file' => 'mimes:pdf,png,jpeg,jpg',
+        ]);
+
+        $filePath = null;
+        if ($request->file('file')) {
+            $file = $request->file('file');
+            $dateTime = new DateTime();
+            $dateTime->modify('+7 hours');
+            $currentDateTime = $dateTime->format('d_m_Y_H_i_s');
+            $fileName = $currentDateTime . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('Asset File', $fileName, 'public');
+        }
+
+        // Update file path in the asset
+        Asset::where('id_asset', $request->id)->update(['file' => $filePath]);
+        return redirect()->back()->with('success', 'File uploaded successfully.');
+    }
+
+    public function deleteFile($id_asset) {
+        $id = Crypt::decrypt($id_asset);
+        $asset = Asset::findOrFail($id);
+
+        // Hapus file dari storage
+        if ($asset->file) {
+            Storage::disk('public')->delete($asset->file);
+        }
+
+        // Update field file menjadi null
+        $asset->file = null;
+        $asset->save();
+
+        return redirect()->back()->with('success', 'File deleted successfully.');
     }
 
     public function reportPDF($id_asset) {

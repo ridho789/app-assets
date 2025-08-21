@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::post('asset-store', [AssetsController::class, 'store']);
     Route::get('asset-edit/{id_asset}', [AssetsController::class, 'edit'])->middleware('auth');
     Route::post('asset-update', [AssetsController::class, 'update']);
+    Route::post('asset-upload', [AssetsController::class, 'upload']);
+    Route::get('asset-delete/{id_asset}', [AssetsController::class, 'deleteFile']);
 
     // master data - category
     Route::get('/category', [CategoryController::class, 'index'])->middleware('auth');

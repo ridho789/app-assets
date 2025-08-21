@@ -21,18 +21,18 @@
                 <div class="col-xl-9">
                     <div class="mb-3">
                         <label for="name" class="form-label">Asset Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter the asset name..." 
-                        oninput="this.value = this.value.toUpperCase()" value="{{ old('name') }}" required>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter the asset name..."
+                            oninput="this.value = this.value.toUpperCase()" value="{{ old('name') }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="location" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter a location..." 
-                        oninput="this.value = this.value.toUpperCase()" value="{{ old('location') }}" required>
+                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter a location..."
+                            oninput="this.value = this.value.toUpperCase()" value="{{ old('location') }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="purchase_price" class="form-label">Purchase Price</label>
-                        <input type="text" class="form-control @error('purchase_price') is-invalid @enderror" 
-                        id="purchase_price" name="purchase_price" placeholder="Enter a purchase price..." value="{{ old('purchase_price') }}" required>
+                        <input type="text" class="form-control @error('purchase_price') is-invalid @enderror"
+                            id="purchase_price" name="purchase_price" placeholder="Enter a purchase price..." value="{{ old('purchase_price') }}" required>
                         @error('purchase_price')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -118,7 +118,7 @@
                         <select class="form-select" name="id_category" id="id_category" required>
                             <option value="">...</option>
                             @foreach ($category as $c)
-                                <option value="{{ $c->id_category }}">{{ $c->name }}</option>
+                            <option value="{{ $c->id_category }}">{{ $c->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -198,7 +198,6 @@
     </div>
 </div>
 
-
 <div class="card bg-white-100 border-0 shadow">
     <div class="card-header flex-row flex-0">
         <form action="{{ url('asset-update') }}" method="POST" enctype="multipart/form-data">
@@ -210,19 +209,19 @@
                     <input type="hidden" name="id" value="{{ $asset->id_asset }}">
                     <div class="mb-3">
                         <label for="name" class="form-label">Asset Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter the asset name..." 
-                        oninput="this.value = this.value.toUpperCase()" value="{{ old('name', $asset->name) }}" required>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter the asset name..."
+                            oninput="this.value = this.value.toUpperCase()" value="{{ old('name', $asset->name) }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="location" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter a location..." 
-                        oninput="this.value = this.value.toUpperCase()" value="{{ old('location', $asset->location) }}" required>
+                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter a location..."
+                            oninput="this.value = this.value.toUpperCase()" value="{{ old('location', $asset->location) }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="purchase_price" class="form-label">Purchase Price</label>
                         <div class="input-group">
-                            <input type="text" class="form-control  @error('purchase_price') is-invalid @enderror" id="purchase_price" 
-                            name="purchase_price" placeholder="Enter a purchase price..." value="{{ 'IDR ' . number_format($asset->purchase_price, 0, ',', '.') }}">
+                            <input type="text" class="form-control  @error('purchase_price') is-invalid @enderror" id="purchase_price"
+                                name="purchase_price" placeholder="Enter a purchase price..." value="{{ 'IDR ' . number_format($asset->purchase_price, 0, ',', '.') }}">
                         </div>
                         @error('purchase_price')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -263,31 +262,31 @@
                     <li role="separator" class="d-md-none dropdown-divider mt-3 mb-3 border-gray-700"></li>
                     <h4>Expense Details</h4>
                     @foreach ($expenses as $categoryName => $expenseGroup)
-                        <div class="mb-3">
-                            <label for="{{ strtolower(str_replace(' ', '_', $categoryName)) }}_expenses" class="form-label">{{ $categoryName }}</label>
-                            @if ($expenseGroup['total'])
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="{{ strtolower(str_replace(' ', '_', $categoryName)) }}_expenses" 
-                                        name="{{ strtolower(str_replace(' ', '_', $categoryName)) }}_expenses" 
-                                        value="{{ 'IDR ' . number_format($expenseGroup['total'], 0, ',', '.') }}" readonly>
-                                    <a href="{{ url('/' . strtolower(str_replace(' ', '-', $categoryName)) . '/' . Crypt::encrypt($asset->id_asset)) }}"
-                                    data-bs-toggle="tooltip" data-bs-placement="right"
-                                    title="Click to view details" class="btn btn-primary input-group-text">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                </div>
-                            @else
-                                <input type="text" class="form-control" id="{{ strtolower(str_replace(' ', '_', $categoryName)) }}_expenses" 
-                                    name="{{ strtolower(str_replace(' ', '_', $categoryName)) }}_expenses" 
-                                    value="{{ 'IDR ' . number_format(0, 0, ',', '.') }}" readonly>
-                            @endif
+                    <div class="mb-3">
+                        <label for="{{ strtolower(str_replace(' ', '_', $categoryName)) }}_expenses" class="form-label">{{ $categoryName }}</label>
+                        @if ($expenseGroup['total'])
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="{{ strtolower(str_replace(' ', '_', $categoryName)) }}_expenses"
+                                name="{{ strtolower(str_replace(' ', '_', $categoryName)) }}_expenses"
+                                value="{{ 'IDR ' . number_format($expenseGroup['total'], 0, ',', '.') }}" readonly>
+                            <a href="{{ url('/' . strtolower(str_replace(' ', '-', $categoryName)) . '/' . Crypt::encrypt($asset->id_asset)) }}"
+                                data-bs-toggle="tooltip" data-bs-placement="right"
+                                title="Click to view details" class="btn btn-primary input-group-text">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
                         </div>
+                        @else
+                        <input type="text" class="form-control" id="{{ strtolower(str_replace(' ', '_', $categoryName)) }}_expenses"
+                            name="{{ strtolower(str_replace(' ', '_', $categoryName)) }}_expenses"
+                            value="{{ 'IDR ' . number_format(0, 0, ',', '.') }}" readonly>
+                        @endif
+                    </div>
                     @endforeach
                     <div class="col-xl-6">
                         <label for="total_expenses" class="form-label" style="margin-bottom: -2px;">
                             <h5>Total Expenses</h5>
                         </label>
-                        <input type="text" class="form-control" id="total_expenses" name="total_expenses" 
+                        <input type="text" class="form-control" id="total_expenses" name="total_expenses"
                             value="{{ 'IDR ' . number_format($totalExpenses, 0, ',', '.') }}" readonly>
                     </div>
                 </div>
@@ -296,23 +295,51 @@
     </div>
 </div>
 
-@if(session('error_type') == 'sweet-alert')
-    <div class="alert" id="errorAlert" style="display: none;">
-        <strong>Error!</strong> {{ session('error') }}
+<div class="card mt-4">
+    <div class="card-body">
+        <form action="{{ url('asset-upload') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <h4 class="mb-3">Asset File</h4>
+            <p class="text-muted mb-4">
+                This section provides files related to the asset, such as documents, images, or other supporting materials.
+            </p>
+            <input type="hidden" name="id" value="{{ $asset->id_asset }}">
+            <div class="form-group">
+                <label for="file">Upload file</label>
+                @if ($asset->file)
+                <div class="mb-2">
+                    <a href="{{ asset('storage/' . $asset->file) }}" target="_blank">
+                        <span class="text-info" style="font-size: 14.5px;">{{ $asset->file }}</span>
+                    </a>
+                    <a class="ms-2" href="#" onclick="confirmDeleteFile('{{ Crypt::encrypt($asset->id_asset) }}')">
+                        <i class="fa-solid fa-trash text-danger position-relative text-lg"></i>
+                    </a>
+                </div>
+                @endif
+                <input type="file" class="form-control" name="file" accept="application/pdf, image/png, image/jpeg">
+            </div>
+            <button class="btn btn-primary mt-3" type="submit">Submit</button>
+        </form>
     </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var error = "{{ session('error') }}";
-            if (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: error,
-                });
-            }
-        });
-    </script>
+@if(session('error_type') == 'sweet-alert')
+<div class="alert" id="errorAlert" style="display: none;">
+    <strong>Error!</strong> {{ session('error') }}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var error = "{{ session('error') }}";
+        if (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error,
+            });
+        }
+    });
+</script>
 @endif
 
 @endif
@@ -411,6 +438,23 @@
         }
     }
 
+    function confirmDeleteFile(encryptedId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to delete route with the encrypted ID
+                window.location.href = '/asset-delete/' + encryptedId;
+            }
+        })
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         var expenseCategorySelect = document.getElementById('expense_category');
 
@@ -420,6 +464,28 @@
                 showForm(selectedValue);
             });
         }
+
+        @if (session('success'))
+            var notyf = new Notyf({
+                duration: 3000,
+                position: {
+                    x: 'right',
+                    y: 'bottom'
+                }
+            });
+            notyf.success("{{ session('success') }}");
+        @endif
+
+        @if (session('error'))
+            var notyf = new Notyf({
+                duration: 3000,
+                position: {
+                    x: 'right',
+                    y: 'bottom'
+                }
+            });
+            notyf.error("{{ session('error') }}");
+        @endif
     });
 
     // currency
