@@ -34,6 +34,18 @@
                     <div>
                         <input type="hidden" name="id" id="id">
                         <div class="mb-3">
+                            <label for="category" class="form-label">Change Category</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Select category...</option>
+                                @foreach($categories as $c)
+                                    <option value="{{ $c->id_category }}" 
+                                        {{ (old('category', $formattedCategory ?? '') == $c->name) ? 'selected' : '' }}>
+                                        {{ $c->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" class="form-control" id="name" name="name" placeholder="Enter a name..." value="{{ old('name') }}" required>
                         </div>

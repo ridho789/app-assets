@@ -10,6 +10,7 @@ use App\Models\Salary;
 use App\Models\Sparepart;
 use App\Models\Unexpected;
 use App\Models\Expense;
+use App\Models\Category;
 use Illuminate\Support\Facades\Crypt;
 
 class ExpensesController extends Controller
@@ -58,16 +59,17 @@ class ExpensesController extends Controller
     public function showCategoryExpenses($category, $id_asset) {
         $id_asset = Crypt::decrypt($id_asset);
         $asset = Asset::where('id_asset', $id_asset)->first();
+        $categories = Category::all();
         $formattedCategory = strtoupper(str_replace('-', ' ', $category));
-
+        
         $expenses = Expense::with('category')
             ->whereHas('category', function ($query) use ($formattedCategory) {
                 $query->where('name', $formattedCategory);
             })
             ->where('id_asset', $id_asset)
-            ->get();
-
-        return view('components.expense', compact('asset', 'expenses', 'category', 'formattedCategory'));
+        ->get();
+        
+        return view('components.expense', compact('asset', 'expenses', 'category', 'categories', 'formattedCategory'));
     }
 
     public function updateExpense(Request $request) {
@@ -79,6 +81,7 @@ class ExpensesController extends Controller
 
         $dataExpense = [
             'name' => $request->name,
+            'id_category' => $request->category,
             'date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->date)->toDateString(),
             'price' => $numericPrice,
             'desc' =>$request->desc,
