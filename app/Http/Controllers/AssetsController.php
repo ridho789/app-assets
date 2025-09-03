@@ -32,6 +32,7 @@ class AssetsController extends Controller
 
         Asset::insert([
             'name' => $request->name,
+            'sub_name' => $request->sub_name,
             'location' =>$request->location,
             'purchase_price' =>$numericPrice,
             'purchase_date' =>\Carbon\Carbon::createFromFormat('m/d/Y', $request->purchase_date)->toDateString(),
@@ -86,6 +87,7 @@ class AssetsController extends Controller
 
         $assetData = [
             'name' => $request->name,
+            'sub_name' => $request->sub_name,
             'location' => $request->location,
             'purchase_price' => $numericPrice,
             'purchase_date' => \Carbon\Carbon::createFromFormat('m/d/Y', $request->purchase_date)->toDateString(),
@@ -96,8 +98,24 @@ class AssetsController extends Controller
 
         Asset::where('id_asset', $request->id)->update($assetData);
 
-        // dashboard
-        return redirect('/dashboard');
+        // Ambil asset yang sudah diupdate
+        $asset = Asset::where('id_asset', $request->id)->first();
+        $category = Category::orderBy('name')->get();
+        $totalExpenses = $formatTotExpenses;
+
+        // Ambil semua expense terkait asset dan join dengan category
+        $expenses = Expense::with('category')
+            ->where('id_asset', $request->id)
+            ->get()
+            ->groupBy('category.name');
+
+        // Hitung total setiap jenis pengeluaran
+        foreach ($expenses as $categoryName => $expenseGroup) {
+            $expenseSum = $expenseGroup->sum('price');
+            $expenses[$categoryName]['total'] = $expenseSum;
+        }
+
+        return redirect()->back()->with('success', 'Asset updated successfully.');
     }
 
     public function upload(Request $request) {

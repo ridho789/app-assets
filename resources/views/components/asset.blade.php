@@ -20,17 +20,22 @@
                 <div class="col-xl-1"><span></span></div>
                 <div class="col-xl-9">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Asset Name</label>
+                        <label for="name" class="form-label">Asset Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Enter the asset name..."
                             oninput="this.value = this.value.toUpperCase()" value="{{ old('name') }}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="location" class="form-label">Location</label>
+                        <label for="sub_name" class="form-label">Asset Sub Name</label>
+                        <input type="text" class="form-control" id="sub_name" name="sub_name" placeholder="Enter the asset sub name..."
+                            oninput="this.value = this.value.toUpperCase()" value="{{ old('sub_name') }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="location" name="location" placeholder="Enter a location..."
                             oninput="this.value = this.value.toUpperCase()" value="{{ old('location') }}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="purchase_price" class="form-label">Purchase Price</label>
+                        <label for="purchase_price" class="form-label">Purchase Price <span class="text-danger">*</span></label>
                         <input type="text" class="form-control @error('purchase_price') is-invalid @enderror"
                             id="purchase_price" name="purchase_price" placeholder="Enter a purchase price..." value="{{ old('purchase_price') }}" required>
                         @error('purchase_price')
@@ -38,7 +43,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="purchase_date">Purchase Date</label>
+                        <label for="purchase_date">Purchase Date <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <span class="input-group-text">
                                 <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -55,7 +60,7 @@
                         <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter a description..." required></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="my-1 me-2" for="status">Status</label>
+                        <label class="my-1 me-2" for="status">Status <span class="text-danger">*</span></label>
                         <select class="form-select" id="status" name="status" required>
                             <option value="">Select a status...</option>
                             <option value="No Activity">No Activity</option>
@@ -207,18 +212,25 @@
                 <div class="col-xl-5">
                     <h4>Asset Details</h4>
                     <input type="hidden" name="id" value="{{ $asset->id_asset }}">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Asset Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter the asset name..."
-                            oninput="this.value = this.value.toUpperCase()" value="{{ old('name', $asset->name) }}" required>
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Asset Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter the asset name..."
+                                oninput="this.value = this.value.toUpperCase()" value="{{ old('name', $asset->name) }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="sub_name" class="form-label">Asset Sub Name</label>
+                            <input type="text" class="form-control" id="sub_name" name="sub_name" placeholder="Enter the asset sub name..."
+                                oninput="this.value = this.value.toUpperCase()" value="{{ old('sub_name', $asset->sub_name) }}">
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <label for="location" class="form-label">Location</label>
+                        <label for="location" class="form-label">Location <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="location" name="location" placeholder="Enter a location..."
                             oninput="this.value = this.value.toUpperCase()" value="{{ old('location', $asset->location) }}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="purchase_price" class="form-label">Purchase Price</label>
+                        <label for="purchase_price" class="form-label">Purchase Price <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <input type="text" class="form-control  @error('purchase_price') is-invalid @enderror" id="purchase_price"
                                 name="purchase_price" placeholder="Enter a purchase price..." value="{{ 'IDR ' . number_format($asset->purchase_price, 0, ',', '.') }}">
@@ -228,7 +240,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="purchase_date">Purchase Date</label>
+                        <label for="purchase_date">Purchase Date <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <span class="input-group-text">
                                 <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -247,7 +259,7 @@
                         </textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="my-1 me-2" for="status">Status</label>
+                        <label class="my-1 me-2" for="status">Status <span class="text-danger">*</span></label>
                         <select class="form-select" id="status" name="status" required>
                             <option value="">Select a status...</option>
                             <option value="No Activity" {{ old('status', $asset->status) == 'No Activity' ? 'selected' : '' }}>No Activity</option>

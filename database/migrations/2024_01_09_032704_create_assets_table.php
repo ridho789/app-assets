@@ -16,10 +16,11 @@ class CreateAssetsTable extends Migration
         Schema::create('tbl_assets', function (Blueprint $table) {
             $table->id('id_asset');
             $table->string('name');
+            $table->string('sub_name')->nullable();
             $table->string('location');
             $table->string('purchase_price');
             $table->date('purchase_date');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->string('status');
             $table->string('tot_expenses')->default('0');
             $table->string('tot_overall_expenses')->default('0');
