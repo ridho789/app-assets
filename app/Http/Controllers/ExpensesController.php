@@ -66,6 +66,7 @@ class ExpensesController extends Controller
             ->whereHas('category', function ($query) use ($formattedCategory) {
                 $query->where('name', $formattedCategory);
             })
+            ->where('id_asset', $id_asset)
             ->orderBy('date', 'desc')
         ->get();
 
