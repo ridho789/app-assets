@@ -116,9 +116,9 @@
                                     data-bs-target="#modal-edit-{{ strtolower(str_replace(' ', '-', $category)) }}">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
-                                <a href="{{ url('/delete-expense-' . Crypt::encrypt($e->id_expense)) }}" 
+                                <!-- <a href="{{ url('/delete-expense-' . Crypt::encrypt($e->id_expense)) }}" 
                                     class="btn btn-icon-only btn btn-danger btn-sm delete-button ms-2" onclick="return confirmDelete()"><i class="fa fa-trash"></i>
-                                </a>
+                                </a> -->
                             </div>
                         </td>
                     </tr>

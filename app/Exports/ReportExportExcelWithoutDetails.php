@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -57,35 +58,41 @@ class ReportExportExcelWithoutDetails implements FromCollection, ShouldAutoSize,
 
     public function collection()
     {
-        $years = collect([]);
         $data = collect([
-            [$this->asset->name . ' (' . $this->asset->status . ')'],
+            [($this->asset->name . (' ' . $this->asset->sub_name ?? '') . ' (' . ($this->asset->status ?? '') . ')')],
             [$this->asset->location],
             [date('l, j F Y', strtotime($this->asset->purchase_date))],
             [$this->asset->description],
             [''] // empty row
         ]);
 
+        $years = collect([]);
+        foreach ($this->expenses as $expenseGroup) {
+            $years = $years->merge(
+                collect($expenseGroup)
+                    ->filter(fn ($item) => is_object($item) && isset($item->date))
+                    ->map(fn ($item) => Carbon::parse($item->date)->format('Y'))
+            );
+        }
+
+        foreach ($this->expenses as $expenseGroup) {
+            $years = $years->merge(
+                collect($expenseGroup)
+                    ->filter(fn ($item) => is_object($item) && isset($item->date))
+                    ->map(fn ($item) => Carbon::parse($item->date)->format('Y'))
+            );
+        }
+
+        $years = $years->unique()->sort()->values();
+
         // Create header row
         $headerRow = collect(['Category']);
 
-        // Process each category and calculate total expenses per year
-        foreach ($this->expenses as $category => $expenseGroup) {
-            $yearlyTotals = $this->calculateTotalExpensesPerYear($expenseGroup);
-            $years = $years->merge($yearlyTotals->keys());
-            // Add yearly totals to the header row
-            foreach ($yearlyTotals as $year => $total) {
-                if (!$headerRow->contains($year)) {
-                    $headerRow->push($year);
-                }
-            }
+        foreach ($years as $year) {
+            $headerRow->push($year);
         }
+
         $headerRow->push('Total');
-
-        // Merge years and remove duplicates
-        $years = $years->unique()->sort();
-
-        // Add header row to data
         $data->push($headerRow);
 
         // Process each category
@@ -121,6 +128,9 @@ class ReportExportExcelWithoutDetails implements FromCollection, ShouldAutoSize,
 
     public function styles(Worksheet $sheet)
     {
+        // Atur lebar kolom A agar tidak terlalu panjang
+        $sheet->getColumnDimension('A')->setWidth(15);
+        $sheet->getStyle('A1:A' . $sheet->getHighestRow())->getAlignment()->setWrapText(true);
         return [
             1 => [
                 'font' => ['bold' => true, 'size' => 12],

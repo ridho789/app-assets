@@ -19,7 +19,7 @@
                 <div class="card-body">
                     <a href="{{ url('asset-edit', ['id' => Crypt::encrypt($asset->id_asset)]) }}">
                         <div class="row d-block d-xl-flex align-items-center">
-                            <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                            <div class="col-12 col-xl-4 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
                                 <div class="icon-shape icon-shape-primary rounded me-4 me-sm-0">
                                     <svg class="icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path>
@@ -39,10 +39,17 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-12 col-xl-7 px-xl-0">
+                            <div class="col-12 col-xl-8 px-xl-0">
                                 <div class="d-none d-sm-block">
                                     <h2 class="h6 text-gray-400 mb-0">Asset Name</h2>
                                     <h3 class="fw-extrabold mb-0" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">{{$asset->name}}</h3>
+                                    <p class="text-gray-500 fw-extrabold mb-0" style="font-size: 14px;">
+                                    @if( $asset->sub_name )
+                                        {{$asset->sub_name}}
+                                    @else
+                                        ~
+                                    @endif
+                                    </p>
                                     <span class="badge mb-1 
                                         @if($asset->status == 'No Activity') bg-primary
                                         @elseif($asset->status == 'Cancelled') bg-danger

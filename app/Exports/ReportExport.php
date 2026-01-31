@@ -41,7 +41,7 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, With
     {
         $data = [
             [
-                'Name' => $this->asset->name . ' (' . $this->asset->status . ')',
+                'Name' => ($this->asset->name . (' ' . $this->asset->sub_name ?? '') . ' (' . ($this->asset->status ?? '') . ')'),
                 'Location' => $this->asset->location,
                 'Purchase Date' => date('l, j F Y', strtotime($this->asset->purchase_date)),
                 'Description' => $this->asset->description,
